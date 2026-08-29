@@ -1,24 +1,49 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from '@react-navigation/native';
-import { Stack } from 'expo-router';
-import { StatusBar } from 'expo-status-bar';
-import 'react-native-reanimated';
+import "@/global.css";
+import {SplashScreen, Stack} from "expo-router";
+import React, {useEffect} from "react";
+// font
+import {
+    Cairo_400Regular,
+    Cairo_500Medium,
+    Cairo_600SemiBold,
+    Cairo_700Bold,
+    Cairo_800ExtraBold,
+    useFonts,
+} from "@expo-google-fonts/cairo";
+import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
+import { ThemeProvider } from "@/context/ThemeContext";
+import { useCurrentUser } from "@/hooks/auth/useCurrentUser";
+import AppContent from "@/store/providers/AppContent";
 
-import { useColorScheme } from '@/hooks/use-color-scheme';
+export default function App() {
+    const [fontsLoaded] = useFonts({
+        Cairo_400Regular,
+        Cairo_500Medium,
+        Cairo_600SemiBold,
+        Cairo_700Bold,
+        Cairo_800ExtraBold,
+    });
 
-export const unstable_settings = {
-  anchor: '(tabs)',
-};
+    useEffect(() => {
+        if (fontsLoaded) {
+            SplashScreen.hideAsync();
+        }
+    }, [fontsLoaded]);
 
-export default function RootLayout() {
-  const colorScheme = useColorScheme();
+    if (!fontsLoaded) {
+        return null;
+    }
 
-  return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal', title: 'Modal' }} />
-      </Stack>
-      <StatusBar style="auto" />
-    </ThemeProvider>
-  );
+    const queryClient = new QueryClient();
+
+    
+
+    return (
+        <QueryClientProvider client={queryClient}>
+            <ThemeProvider>
+                <AppContent />
+            </ThemeProvider>
+        </QueryClientProvider>
+    );
 }
+
