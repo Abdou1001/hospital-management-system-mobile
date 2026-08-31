@@ -1,12 +1,14 @@
-import {icons} from "@/constants/icons";
-import {useThemeStore} from "@/store/theme.store";
-import React from "react";
-import { Image, Pressable, Text, View} from "react-native";
-import Icon from "../ui/icons/Icon";
+import { icons } from "@/constants/icons";
+import { useAuth } from "@/hooks/auth/useAuth";
+import { useThemeStore } from "@/store/theme.store";
 import { useRouter } from "expo-router";
+import React from "react";
+import { Image, Pressable, Text, View } from "react-native";
+import Icon from "../ui/icons/Icon";
 
 const HomeHeader = () => {
-    const {isDark, toggleTheme} = useThemeStore();
+    const { isDark, toggleTheme } = useThemeStore();
+    const { isAuthenticated } = useAuth();
     const router = useRouter();
 
     return (
@@ -32,16 +34,18 @@ const HomeHeader = () => {
                         color={isDark ? "#ffffff" : "#081126"}
                     />
                 </Pressable>
-                <Pressable
-                    onPress={() => router.push("/(auth)/login")}
-                    className="header-buttons p-2 rounded-full active:opacity-60">
-                    <Icon
-                        icon={icons.bell}
-                        size={22}
-                        className="home-icons"
-                        color={isDark ? "#ffffff" : "#081126"}
-                    />
-                </Pressable>
+                {!isAuthenticated && (
+                    <Pressable
+                        onPress={() => router.push("/(auth)/login")}
+                        className="header-buttons p-2 rounded-full active:opacity-60">
+                        <Icon
+                            icon={icons.doctors}
+                            size={22}
+                            className="home-icons"
+                            color={isDark ? "#ffffff" : "#081126"}
+                        />
+                    </Pressable>
+                )}
             </View>
 
             {/* الصوره و الاسم */}

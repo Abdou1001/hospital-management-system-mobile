@@ -33,11 +33,9 @@ export async function getUsers(
 }
 
 export async function updateMyProfile(
-    id: number,
     value: UpdateMyProfileSchema,
 ) {
-    console.log(value, id);
-    const {data} = await api.put(`/users/${id}`, value);
+    const {data} = await api.patch("/users/profile", value);
     return data;
 }
 

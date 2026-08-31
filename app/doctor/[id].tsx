@@ -257,11 +257,11 @@ const DoctorDetailsScreen = () => {
                                                 <Text className="font-sans-bold text-sm text-primary dark:text-green-400">
                                                     {sched.day_of_week}
                                                 </Text>
-                                                <Text className="font-sans-medium text-xs text-muted-foreground">
+                                                <Text className="font-sans-medium text-xs text-muted-foreground dark:text-slate-400">
                                                     ({sched.shift_type})
                                                 </Text>
                                             </View>
-                                            <Text className="font-sans-medium text-xs text-slate-600 dark:text-slate-300">
+                                            <Text className="font-sans-semibold text-sm text-slate-600 dark:text-slate-300">
                                                 ⏱️ {sched.start_time} -{" "}
                                                 {sched.end_time}
                                             </Text>

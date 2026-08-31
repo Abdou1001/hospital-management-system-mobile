@@ -18,11 +18,11 @@ export const updateMyProfileSchema = z.object({
     gender: z.enum(GENDER),
 
     date_of_birth: z
-        .date("تاريخ الميلاد غير صالح")
-        .refine(
-            (date) => date <= new Date(),
-            "لا يمكن أن يكون تاريخ الميلاد في المستقبل",
-        ),
+        .string()
+        .trim()
+        .min(1, "تاريخ الميلاد مطلوب")
+        .optional()
+        .or(z.literal("")),
 });
 
 export type UpdateMyProfileSchema = z.infer<typeof updateMyProfileSchema>;

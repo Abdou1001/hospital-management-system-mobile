@@ -10,7 +10,7 @@ import {paginationSchema} from "@/validation/paginationSchema";
 export const appointmentDoctorSchema = z.object({
     doctor_id: z.number(),
     full_name: z.string(),
-    path_image: z.string().url(),
+    path_image: z.string().nullable().optional(),
 });
 
 // =========================
@@ -18,9 +18,9 @@ export const appointmentDoctorSchema = z.object({
 // =========================
 
 export const appointmentDoctorScheduleSchema = z.object({
-    doctor: appointmentDoctorSchema,
-    doctor_id: z.number(),
-    schedule_id: z.number(),
+    doctor: appointmentDoctorSchema.nullable().optional(),
+    doctor_id: z.number().nullable().optional(),
+    schedule_id: z.number().nullable().optional(),
 });
 
 // =========================
@@ -30,10 +30,10 @@ export const appointmentDoctorScheduleSchema = z.object({
 export const appointmentUserSchema = z.object({
     user_id: z.number(),
     full_name: z.string(),
-    email: z.email(),
-    phone_number: z.string(),
-    gender: z.enum(GENDER),
-    date_of_birth: z.string().nullable(),
+    email: z.string().nullable().optional(),
+    phone_number: z.string().nullable().optional(),
+    gender: z.enum(GENDER).nullable().optional(),
+    date_of_birth: z.string().nullable().optional(),
 });
 
 // =========================
@@ -53,13 +53,13 @@ export const appointmentSchema = z.object({
 
     patient_phone: z.string(),
 
-    patient_age: z.number(),
+    patient_age: z.number().nullable().optional(),
 
-    patient_gender: z.enum(GENDER),
+    patient_gender: z.enum(GENDER).nullable().optional(),
 
     notes: z.string().nullable(),
 
-    payment_receipt: z.string().url().nullable(),
+    payment_receipt: z.string().nullable().optional(),
 
     appointment_date: z.string(),
 

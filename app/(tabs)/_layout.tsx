@@ -17,12 +17,12 @@ import { useThemeStore } from "@/store/theme.store";
 // Tab Bar configuration
 const tabBar = components.tabBar;
 
-const ACTIVE_SIZE = 68;
+const ACTIVE_SIZE = 65;
 
 const CustomTabBar = () => {
     // Safe Area
     const insets = useSafeAreaInsets();
-    const { isDark } = useThemeStore();
+    const {isDark} = useThemeStore();
 
     const router = useRouter();
     const pathname = usePathname();
@@ -56,7 +56,7 @@ const CustomTabBar = () => {
         if (tabWidth === 0) return;
 
         const targetX =
-            currentIndex * tabWidth + tabWidth / 2 - ACTIVE_SIZE / 2;
+            currentIndex * tabWidth + tabWidth / 2 - ACTIVE_SIZE / 1.9;
 
         Animated.spring(animatedX, {
             toValue: targetX,
@@ -68,7 +68,7 @@ const CustomTabBar = () => {
     }, [currentIndex, tabWidth]);
 
     /*
-     * معرفة عرض الـ Tab Bar
+     * معرفloginة عرض الـ Tab Bar
      */
     const handleLayout = (event: LayoutChangeEvent) => {
         const width = event.nativeEvent.layout.width;
@@ -80,7 +80,9 @@ const CustomTabBar = () => {
         <View
             onLayout={handleLayout}
             className={`absolute overflow-hidden rounded-3xl ${
-                isDark ? "bg-[#1e293b] border-slate-700/60" : "bg-white border-black/10"
+                isDark
+                    ? "bg-[#1e293b] border-slate-700/60"
+                    : "bg-white border-black/10"
             } border shadow-xl`}
             style={{
                 left: tabBar.horizontalInset,
@@ -99,7 +101,7 @@ const CustomTabBar = () => {
                     style={{
                         width: ACTIVE_SIZE,
                         height: ACTIVE_SIZE,
-                        top: tabBar.height / 2 - ACTIVE_SIZE / 2,
+                        top: tabBar.height / 2 - ACTIVE_SIZE / 1.95,
 
                         transform: [
                             {
@@ -118,14 +120,14 @@ const CustomTabBar = () => {
                     const iconColor = isActive
                         ? "#ffffff"
                         : isDark
-                        ? "rgba(255, 255, 255, 0.7)"
-                        : "#334155";
+                          ? "rgba(255, 255, 255, 0.7)"
+                          : "#334155";
 
                     const textStyle = isActive
                         ? "text-white font-sans-bold"
                         : isDark
-                        ? "text-slate-400 font-sans-medium"
-                        : "text-slate-700 font-sans-medium";
+                          ? "text-slate-400 font-sans-medium"
+                          : "text-slate-700 font-sans-medium";
 
                     return (
                         <TouchableOpacity

@@ -1,42 +1,33 @@
-import {useMutation, useQueryClient} from "@tanstack/react-query";
-import {toast} from "sonner";
-
-import {changePassword} from "@/api/user.api";
-
-import {useRouter} from "next/navigation";
-import { useAuthStore } from "@/store/auth.store";
-import { logout } from "@/api/auth.api";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { changePassword } from "@/api/user.api";
+import { ChangePasswordSchema } from "@/validation/users/schemas/change-password.schema";
+import { toast } from "@/lib/toast";
 
 export const useChangePassword = () => {
-    const router = useRouter();
-
     const queryClient = useQueryClient();
 
-    const clearUser = useAuthStore((state) => state.clearUser);
-
     return useMutation({
-        mutationFn: changePassword,
+        mutationFn: (values: ChangePasswordSchema) => changePassword(values),
 
-        async onSuccess(data) {
-            toast.success(data.message);
-
-            // حذف جميع بيانات React Query
-            queryClient.clear();
-
-            // حذف المستخدم من Zustand
-            clearUser();
-
-            // حذف الـ Cookie من السيرفر
-            await logout();
-
-            router.replace("/login");
+        onSuccess(data) {
+            toast.success(data?.message || "تم تغيير كلمة المرور بنجاح");
+            queryClient.invalidateQueries({ queryKey: ["current-user"] });
         },
 
         onError(error: any) {
-            toast.error(
-                error.response?.data?.message ??
-                    "حدث خطأ أثناء تغيير كلمة المرور",
-            );
+            const errors = error?.response?.data?.errors;
+            const message = error?.response?.data?.message;
+
+            if (Array.isArray(errors) && errors.length > 0) {
+                errors.forEach((err: any) => {
+                    toast.error(typeof err === "string" ? err : err.message || err.msg);
+                });
+            } else if (message) {
+                toast.error(message);
+            } else {
+                toast.error("حدث خطأ أثناء تغيير كلمة المرور");
+            }
         },
     });
 };
+

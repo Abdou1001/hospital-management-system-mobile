@@ -1,9 +1,9 @@
-import React from "react";
-import { View } from "react-native";
-import TitleSection from "./TitleSection";
-import ShowDepartments from "../departments/ShowDepartments";
 import { icons } from "@/constants/icons";
 import { useDepartments } from "@/hooks/departments/useDepartments";
+import React from "react";
+import { View } from "react-native";
+import ShowDepartments from "../departments/ShowDepartments";
+import TitleSection from "./TitleSection";
 
 const DepartmentSection = () => {
     const { data, isLoading } = useDepartments({ limit: 8 });

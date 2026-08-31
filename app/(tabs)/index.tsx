@@ -11,17 +11,6 @@ import {SafeAreaView as RNSafeAreaView} from "react-native-safe-area-context";
 const SafeAreaView = styled(RNSafeAreaView);
 
 export default function App() {
-    const user : User = {
-        full_name: "عبدالرحمن احمد محمد يسلم بن سعد",
-        phone_number: "777557717",
-        age: 12,
-        email: "",
-        role: "user",
-        gender: "ذكر",
-        created_at: "",
-        user_id: 1,
-        is_active: "active"
-    };
     return (
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
             <ScrollView className="bg-background dark:bg-slate-900">

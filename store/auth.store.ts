@@ -1,4 +1,4 @@
-import {create} from "zustand";
+import { create } from "zustand";
 
 export interface User {
     user_id: number;
@@ -8,6 +8,8 @@ export interface User {
     gender: "ذكر" | "أنثى";
     date_of_birth: string | null;
     role: "admin" | "user" | "reception";
+    is_active?: string;
+    created_at?: string;
 }
 
 interface AuthState {

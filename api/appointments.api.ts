@@ -31,3 +31,13 @@ export async function getOneAppointment(
 
     return data;
 }
+
+export async function getMyAppointments(
+    params?: AppointmentFilters,
+): Promise<AppointmentsResponse> {
+    const {data} = await api.get("/appointments/my-appointments", {
+        params,
+    });
+
+    return data;
+}

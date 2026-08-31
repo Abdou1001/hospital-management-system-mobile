@@ -15,7 +15,8 @@ const LoginMessage = () => {
         <View
             className={`mt-8 items-center justify-center rounded-3xl border  px-6 py-8 ${isDark ? "border-slate-700/60 bg-slate-800" : "border-border bg-card"}`}>
             {/* الرسالة */}
-            <Text className={`text-center text-lg font-sans-bold text-primary ${isDark ? "text-slate-100" : "text-slate-800"}`}>
+            <Text
+                className={`text-center text-lg font-sans-bold text-primary ${isDark ? "text-slate-100" : "text-slate-800"}`}>
                 لابد من تسجيل الدخول لحجز موعد عند طبيب
             </Text>
 
@@ -31,6 +32,15 @@ const LoginMessage = () => {
                 className="mt-5 w-full items-center justify-center rounded-xl bg-main py-3.5 active:opacity-80">
                 <Text className="text-base font-sans-bold text-background">
                     تسجيل الدخول
+                </Text>
+            </Pressable>
+
+            {/* زر تسجيل انشاء حساب */}
+            <Pressable
+                onPress={() => router.push("/(auth)/register")}
+                className="mt-5 w-full items-center justify-center rounded-xl border-2 py-3.5 border-main bg-transparent ">
+                <Text className="text-base font-sans-bold text-main dark:text-emerald-400">
+                    إنشاء حساب جديد
                 </Text>
             </Pressable>
         </View>
