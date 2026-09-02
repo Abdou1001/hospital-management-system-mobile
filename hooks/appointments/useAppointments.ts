@@ -1,4 +1,4 @@
-import {useQuery} from "@tanstack/react-query";
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 import {
     getAppointments,
@@ -6,10 +6,14 @@ import {
     getOneAppointment,
 } from "@/api/appointments.api";
 
-export function useAppointments(params: AppointmentFilters) {
-    return useQuery({
+export function useAppointments(params?: AppointmentFilters) {
+    return useInfiniteQuery({
         queryKey: ["appointments", params],
-        queryFn: () => getAppointments(params),
+        queryFn: ({ pageParam = 1 }) =>
+            getAppointments({ ...params, page: pageParam as number }),
+        initialPageParam: 1,
+        getNextPageParam: (lastPage) =>
+            lastPage?.pagination?.nextPage ?? undefined,
     });
 }
 

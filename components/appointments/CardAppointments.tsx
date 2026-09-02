@@ -154,8 +154,10 @@ const CardAppointments: React.FC<CardAppointmentsProps> = ({
                                 color="#10b981"
                             />
                             <Text
-                                className={`font-sans-bold text-xs ${
-                                    isDark ? "text-emerald-400" : "text-emerald-600"
+                                className={`font-sans-bold text-sm ${
+                                    isDark
+                                        ? "text-emerald-400"
+                                        : "text-emerald-600"
                                 }`}>
                                 موعد الحجز: {appointment.appointment_date}
                             </Text>
@@ -170,7 +172,7 @@ const CardAppointments: React.FC<CardAppointmentsProps> = ({
                             />
                             <Text
                                 numberOfLines={1}
-                                className={`font-sans-medium text-xs ${
+                                className={`font-sans-medium text-xs mt-1 ${
                                     isDark ? "text-slate-300" : "text-slate-600"
                                 }`}>
                                 المريض: {appointment.patient_name}
@@ -191,19 +193,22 @@ const CardAppointments: React.FC<CardAppointmentsProps> = ({
                                 المبلغ الإجمالي:
                             </Text>
                             <Text className="font-sans-bold text-sm text-main dark:text-emerald-400">
-                                {appointment.total_amount || appointment.doctor_fee || 0} ر.ي
+                                {appointment.total_amount ||
+                                    appointment.doctor_fee ||
+                                    0}{" "}
+                                ر.ي
                             </Text>
                         </View>
 
                         {/* الهاتف */}
-                        <View className="flex-row-reverse items-center gap-1">
+                        <View className="flex-row items-center gap-1">
                             <Ionicons
                                 name="call-outline"
                                 size={13}
                                 color={isDark ? "#94a3b8" : "#64748b"}
                             />
                             <Text
-                                className={`font-sans-medium text-xs ${
+                                className={`font-sans-medium text-xs mt-1 ${
                                     isDark ? "text-slate-300" : "text-slate-600"
                                 }`}>
                                 {appointment.patient_phone}
@@ -220,8 +225,8 @@ const CardAppointments: React.FC<CardAppointmentsProps> = ({
                                 color="#f59e0b"
                             />
                             <Text
-                                className="flex-1 font-sans-medium text-xs text-amber-800 dark:text-amber-300 leading-4"
-                                style={{ textAlign: "right" }}>
+                                className="flex-1 font-sans-medium text-xs text-amber-800 dark:text-amber-300 py-0.5"
+                                style={{textAlign: "right"}}>
                                 ملاحظة الإدارة: {appointment.admin_notes}
                             </Text>
                         </View>
@@ -236,8 +241,8 @@ const CardAppointments: React.FC<CardAppointmentsProps> = ({
                                 color={isDark ? "#94a3b8" : "#64748b"}
                             />
                             <Text
-                                className="flex-1 font-sans-medium text-xs text-muted-foreground dark:text-slate-300 leading-4"
-                                style={{ textAlign: "right" }}>
+                                className="flex-1 font-sans-medium text-xs text-muted-foreground dark:text-slate-300 p-0.5"
+                                style={{textAlign: "right"}}>
                                 {appointment.notes}
                             </Text>
                         </View>
@@ -276,7 +281,7 @@ const CardAppointments: React.FC<CardAppointmentsProps> = ({
                     onRequestClose={() => setIsReceiptOpen(false)}>
                     <View className="flex-1 items-center justify-center bg-black/80 p-5">
                         <View
-                            className={`w-full max-w-sm overflow-hidden rounded-3xl border p-5 ${
+                            className={`w-full max-w-lg overflow-hidden rounded-3xl border p-5 ${
                                 isDark
                                     ? "border-slate-700 bg-slate-900"
                                     : "border-slate-100 bg-white"
@@ -301,7 +306,7 @@ const CardAppointments: React.FC<CardAppointmentsProps> = ({
 
                             <View className="my-4 h-72 w-full overflow-hidden rounded-2xl bg-slate-100 dark:bg-slate-800">
                                 <Image
-                                    source={{ uri: appointment.payment_receipt }}
+                                    source={{uri: appointment.payment_receipt}}
                                     resizeMode="contain"
                                     className="size-full"
                                 />

@@ -11,11 +11,11 @@ import {DepartmentFilters} from "@/types/filter";
 
 export async function getDepartments(
     params?: DepartmentFilters,
-) {
+): Promise<DepartmentsResponse> {
     const {data} = await api.get<DepartmentsResponse>("/departments", {
         params,
     });
-    return data.results;
+    return data;
 }
 
 /* -------------------- Get One Department -------------------- */

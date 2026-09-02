@@ -7,8 +7,9 @@ import { useDoctors } from "@/hooks/doctors/useDoctors";
 
 const DoctorSection = () => {
     const { data, isLoading } = useDoctors({ limit: 8 });
-    
-        const apiDoctors = Array.isArray(data?.results) ? data.results : [];
+
+    const apiDoctors =
+        data?.pages.flatMap((page) => page.results) ?? [];
         
     return (
         <View className="mt-5">

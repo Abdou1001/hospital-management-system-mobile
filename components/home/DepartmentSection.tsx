@@ -8,9 +8,8 @@ import TitleSection from "./TitleSection";
 const DepartmentSection = () => {
     const { data, isLoading } = useDepartments({ limit: 8 });
 
-    const apiDepartments = Array.isArray(data)
-        ? data
-        : [];
+    const apiDepartments =
+        data?.pages.flatMap((page) => page.results) ?? [];
 
     return (
         <View>

@@ -75,3 +75,32 @@ export const changeDoctorScheduleStatus = async (id: number) => {
     return data;
 };
 
+/* ==========================================
+    Get Schedules By Doctor ID
+========================================== */
+export interface DoctorScheduleItem {
+    schedule_id: number;
+    day_of_week: string;
+    shift_type: string;
+    start_time: string;
+    end_time: string;
+    notes: string | null;
+    doctor_id: number;
+    status: string;
+    max_patients: number;
+}
+
+export interface DoctorScheduleByDoctorResponse {
+    status: string;
+    message: string;
+    results: DoctorScheduleItem[];
+}
+
+export const getDoctorSchedulesByDoctor = async (
+    doctorId: number,
+): Promise<DoctorScheduleByDoctorResponse> => {
+    const {data} = await api.get(`/doctor-schedule/${doctorId}`);
+
+    return data;
+};
+
