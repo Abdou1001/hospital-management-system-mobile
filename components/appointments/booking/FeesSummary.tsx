@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { Text, View } from "react-native";
 
 interface FeesSummaryProps {
@@ -33,7 +33,8 @@ const FeesSummary: React.FC<FeesSummaryProps> = ({
                     <Text className="font-sans-medium text-xs text-muted-foreground dark:text-slate-400">
                         رسوم الكشفية:
                     </Text>
-                    <Text className={`font-sans-semibold text-xs ${isDark ? "text-white" : "text-slate-800"}`}>
+                    <Text
+                        className={`font-sans-semibold text-xs ${isDark ? "text-white" : "text-slate-800"}`}>
                         {doctorFee} ر.ي
                     </Text>
                 </View>
@@ -41,11 +42,13 @@ const FeesSummary: React.FC<FeesSummaryProps> = ({
                     <Text className="font-sans-medium text-xs text-muted-foreground dark:text-slate-400">
                         رسوم الخدمة والتطبيق:
                     </Text>
-                    <Text className={`font-sans-semibold text-xs ${isDark ? "text-white" : "text-slate-800"}`}>
+                    <Text
+                        className={`font-sans-semibold text-xs ${isDark ? "text-white" : "text-slate-800"}`}>
                         {appFee} ر.ي
                     </Text>
                 </View>
-                <View className={`mt-1 flex-row-reverse justify-between border-t pt-2 ${isDark ? "border-slate-700" : "border-slate-200"}`}>
+                <View
+                    className={`mt-1 flex-row-reverse justify-between border-t pt-2 ${isDark ? "border-slate-700" : "border-slate-200"}`}>
                     <Text className="font-sans-bold text-sm text-main">
                         الإجمالي:
                     </Text>
@@ -58,4 +61,4 @@ const FeesSummary: React.FC<FeesSummaryProps> = ({
     );
 };
 
-export default FeesSummary;
+export default memo(FeesSummary);

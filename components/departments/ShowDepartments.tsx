@@ -2,6 +2,7 @@ import React from "react";
 import {ActivityIndicator, Text, View} from "react-native";
 import CardDepartment from "./CardDepartment";
 import images from "@/constants/images";
+import { useThemeStore } from "@/store/theme.store";
 
 export const getDepartmentImageSource = (item: any) => {
     if (item.image && typeof item.image !== "string") {
@@ -37,6 +38,7 @@ const ShowDepartments: React.FC<ShowDepartmentsProps> = ({
     isLoading,
     limit,
 }) => {
+    const { isDark } = useThemeStore();
     // Loading
     if (isLoading) {
         return (
@@ -57,12 +59,15 @@ const ShowDepartments: React.FC<ShowDepartmentsProps> = ({
     // لا توجد أقسام
     if (list.length === 0) {
         return (
-            <View className="mt-4 items-center justify-center rounded-3xl border border-border bg-card px-6 py-8">
-                <Text className="mt-3 text-lg font-sans-bold text-primary">
+            <View
+                className={`mt-4 items-center justify-center rounded-3xl border ${isDark ? "border-white/50 bg-slate-800" : "border-border bg-card"}  px-6 py-8`}>
+                <Text
+                    className={`mt-3 text-lg font-sans-bold ${isDark ? "text-white" : "text-primary"}`}>
                     لا توجد أقسام
                 </Text>
 
-                <Text className="mt-1 text-center text-sm font-sans-medium text-muted-foreground">
+                <Text
+                    className={`mt-1 text-center text-sm font-sans-medium  ${isDark ? "text-gray-400" : "text-muted-foreground"}`}>
                     لا توجد أقسام متاحة حاليًا
                 </Text>
             </View>

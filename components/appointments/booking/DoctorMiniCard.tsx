@@ -1,4 +1,4 @@
-import React from "react";
+import React, { memo } from "react";
 import { Image, Text, View } from "react-native";
 
 interface DoctorMiniCardProps {
@@ -51,4 +51,4 @@ const DoctorMiniCard: React.FC<DoctorMiniCardProps> = ({
     );
 };
 
-export default DoctorMiniCard;
+export default memo(DoctorMiniCard);

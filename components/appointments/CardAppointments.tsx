@@ -1,16 +1,10 @@
-import { Ionicons } from "@expo/vector-icons";
-import React, { useState } from "react";
-import {
-    Image,
-    ImageSourcePropType,
-    Modal,
-    Pressable,
-    Text,
-    View,
-} from "react-native";
 import images from "@/constants/images";
-import { useThemeStore } from "@/store/theme.store";
-import { Appointment } from "@/validation/appointments/schemas/appointment.schema";
+import {useThemeStore} from "@/store/theme.store";
+import {Appointment} from "@/validation/appointments/schemas/appointment.schema";
+import {Ionicons} from "@expo/vector-icons";
+import React, {useState} from "react";
+import {Image, ImageSourcePropType, Pressable, Text, View} from "react-native";
+import PaymentReceiptModal from "./PaymentReceiptModal";
 
 export interface CardAppointmentsProps {
     appointment: Appointment;
@@ -37,7 +31,7 @@ const CardAppointments: React.FC<CardAppointmentsProps> = ({
     appointment,
     className = "",
 }) => {
-    const { isDark } = useThemeStore();
+    const {isDark} = useThemeStore();
     const [isReceiptOpen, setIsReceiptOpen] = useState(false);
 
     const getStatusBadge = (status: string) => {
@@ -46,7 +40,9 @@ const CardAppointments: React.FC<CardAppointmentsProps> = ({
                 return {
                     label: "مؤكد ومقبول",
                     icon: "checkmark-circle" as const,
-                    bgClass: isDark ? "bg-emerald-950/60 border-emerald-800/80" : "bg-emerald-50 border-emerald-200",
+                    bgClass: isDark
+                        ? "bg-emerald-950/60 border-emerald-800/80"
+                        : "bg-emerald-50 border-emerald-200",
                     textClass: isDark ? "text-emerald-400" : "text-emerald-700",
                     iconColor: "#10b981",
                 };
@@ -54,7 +50,9 @@ const CardAppointments: React.FC<CardAppointmentsProps> = ({
                 return {
                     label: "قيد المراجعة",
                     icon: "time" as const,
-                    bgClass: isDark ? "bg-amber-950/60 border-amber-800/80" : "bg-amber-50 border-amber-200",
+                    bgClass: isDark
+                        ? "bg-amber-950/60 border-amber-800/80"
+                        : "bg-amber-50 border-amber-200",
                     textClass: isDark ? "text-amber-400" : "text-amber-700",
                     iconColor: "#f59e0b",
                 };
@@ -62,7 +60,9 @@ const CardAppointments: React.FC<CardAppointmentsProps> = ({
                 return {
                     label: "مرفوض",
                     icon: "close-circle" as const,
-                    bgClass: isDark ? "bg-red-950/60 border-red-800/80" : "bg-red-50 border-red-200",
+                    bgClass: isDark
+                        ? "bg-red-950/60 border-red-800/80"
+                        : "bg-red-50 border-red-200",
                     textClass: isDark ? "text-red-400" : "text-red-700",
                     iconColor: "#ef4444",
                 };
@@ -70,7 +70,9 @@ const CardAppointments: React.FC<CardAppointmentsProps> = ({
                 return {
                     label: "ملغي",
                     icon: "ban" as const,
-                    bgClass: isDark ? "bg-slate-800 border-slate-700" : "bg-slate-100 border-slate-200",
+                    bgClass: isDark
+                        ? "bg-slate-800 border-slate-700"
+                        : "bg-slate-100 border-slate-200",
                     textClass: isDark ? "text-slate-400" : "text-slate-600",
                     iconColor: "#64748b",
                 };
@@ -274,54 +276,11 @@ const CardAppointments: React.FC<CardAppointmentsProps> = ({
 
             {/* نافذة عرض سند الدفع (Receipt Modal) */}
             {appointment.payment_receipt ? (
-                <Modal
-                    visible={isReceiptOpen}
-                    transparent
-                    animationType="fade"
-                    onRequestClose={() => setIsReceiptOpen(false)}>
-                    <View className="flex-1 items-center justify-center bg-black/80 p-5">
-                        <View
-                            className={`w-full max-w-lg overflow-hidden rounded-3xl border p-5 ${
-                                isDark
-                                    ? "border-slate-700 bg-slate-900"
-                                    : "border-slate-100 bg-white"
-                            }`}>
-                            <View className="flex-row-reverse items-center justify-between pb-3 border-b border-border dark:border-slate-800">
-                                <Text
-                                    className={`font-sans-bold text-base ${
-                                        isDark ? "text-white" : "text-slate-900"
-                                    }`}>
-                                    سند الدفع الإلكتروني
-                                </Text>
-                                <Pressable
-                                    onPress={() => setIsReceiptOpen(false)}
-                                    className="size-8 rounded-full bg-slate-100 dark:bg-slate-800 items-center justify-center">
-                                    <Ionicons
-                                        name="close"
-                                        size={18}
-                                        color={isDark ? "#94a3b8" : "#64748b"}
-                                    />
-                                </Pressable>
-                            </View>
-
-                            <View className="my-4 h-72 w-full overflow-hidden rounded-2xl bg-slate-100 dark:bg-slate-800">
-                                <Image
-                                    source={{uri: appointment.payment_receipt}}
-                                    resizeMode="contain"
-                                    className="size-full"
-                                />
-                            </View>
-
-                            <Pressable
-                                onPress={() => setIsReceiptOpen(false)}
-                                className="h-12 w-full items-center justify-center rounded-2xl bg-main">
-                                <Text className="font-sans-bold text-sm text-white">
-                                    إغلاق
-                                </Text>
-                            </Pressable>
-                        </View>
-                    </View>
-                </Modal>
+                <PaymentReceiptModal
+                    appointment={appointment}
+                    isReceiptOpen={isReceiptOpen}
+                    setIsReceiptOpen={setIsReceiptOpen}
+                />
             ) : null}
         </>
     );

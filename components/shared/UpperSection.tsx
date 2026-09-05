@@ -1,18 +1,38 @@
-import { User } from "@/validation/users/schemas/user.schema";
-import React from "react";
+import React, { memo } from "react";
 import HomeHeader from "../home/HomeHeader";
-import SearchForm from "../home/SearchForm";
+import SearchBar, { SearchBarProps } from "./SearchBar";
 
-const UpperSection = () => {
+export interface UpperSectionProps extends SearchBarProps {
+    showSearch?: boolean;
+}
+
+const UpperSection: React.FC<UpperSectionProps> = ({
+    showSearch = true,
+    placeholder = "ابحث عن طبيبك...",
+    value,
+    onChangeText,
+    onClear,
+    onSubmit,
+    isLoading,
+}) => {
     return (
         <>
             {/* Header */}
             <HomeHeader />
 
             {/* Search */}
-            <SearchForm />
+            {showSearch && (
+                <SearchBar
+                    placeholder={placeholder}
+                    value={value}
+                    onChangeText={onChangeText}
+                    onClear={onClear}
+                    onSubmit={onSubmit}
+                    isLoading={isLoading}
+                />
+            )}
         </>
     );
 };
 
-export default UpperSection;
+export default memo(UpperSection);

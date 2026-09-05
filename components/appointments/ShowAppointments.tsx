@@ -1,9 +1,9 @@
-import {useMyAppointments} from "@/hooks/appointments/useMyAppointments";
-import {useThemeStore} from "@/store/theme.store";
-import {Appointment} from "@/validation/appointments/schemas/appointment.schema";
-import {Ionicons} from "@expo/vector-icons";
-import {useRouter} from "expo-router";
-import React, {useMemo, useState} from "react";
+import { useMyAppointments } from "@/hooks/appointments/useMyAppointments";
+import { useThemeStore } from "@/store/theme.store";
+import { Appointment } from "@/validation/appointments/schemas/appointment.schema";
+import { Ionicons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import React, { memo, useCallback, useMemo, useState } from "react";
 import {
     ActivityIndicator,
     FlatList,
@@ -17,22 +17,34 @@ import CardAppointments from "./CardAppointments";
 
 type FilterStatus = "all" | "approved" | "pending" | "cancelled" | "rejected";
 
-const filterOptions: {key: FilterStatus; label: string}[] = [
-    {key: "all", label: "الكل"},
-    {key: "approved", label: "مؤكدة"},
-    {key: "pending", label: "قيد الانتظار"},
-    {key: "cancelled", label: "ملغية"},
-    {key: "rejected", label: "مرفوضة"},
+const filterOptions: { key: FilterStatus; label: string }[] = [
+    { key: "all", label: "الكل" },
+    { key: "approved", label: "مؤكدة" },
+    { key: "pending", label: "قيد الانتظار" },
+    { key: "cancelled", label: "ملغية" },
+    { key: "rejected", label: "مرفوضة" },
 ];
 
-const ShowAppointments = () => {
+interface ShowAppointmentsProps {
+    keyword?: string;
+}
+
+const ShowAppointments: React.FC<ShowAppointmentsProps> = ({ keyword }) => {
     const router = useRouter();
-    const {isDark} = useThemeStore();
+    const { isDark } = useThemeStore();
     const [selectedFilter, setSelectedFilter] = useState<FilterStatus>("all");
 
     const queryFilter = useMemo(() => {
-        return selectedFilter !== "all" ? {status: selectedFilter} : undefined;
-    }, [selectedFilter]);
+        const trimmed = keyword?.trim();
+        const filterObj: any = {};
+        if (selectedFilter !== "all") {
+            filterObj.status = selectedFilter;
+        }
+        if (trimmed) {
+            filterObj.keyword = trimmed;
+        }
+        return Object.keys(filterObj).length > 0 ? filterObj : undefined;
+    }, [selectedFilter, keyword]);
 
     const {
         data,
@@ -53,17 +65,16 @@ const ShowAppointments = () => {
         return results.filter((item) => item.status === selectedFilter);
     }, [data, selectedFilter]);
 
-    const handleLoadMore = () => {
+    const handleLoadMore = useCallback(() => {
         if (hasNextPage && !isFetchingNextPage) {
             fetchNextPage();
         }
-    };
+    }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
     return (
-        <View>
-            {/* الفلتره */}
+        <View className="flex-1">
+            {/* أزرار الفلترة حسب الحالة */}
             <View className="mb-4">
-                {/* أزرار الفلترة حسب الحالة */}
                 <ScrollView
                     horizontal
                     showsHorizontalScrollIndicator={false}
@@ -100,12 +111,17 @@ const ShowAppointments = () => {
                     })}
                 </ScrollView>
             </View>
+
             {/* الحجوزات */}
             <FlatList
                 data={appointments}
                 keyExtractor={(item) => String(item.appointment_id)}
                 showsVerticalScrollIndicator={false}
-                renderItem={({item}) => <CardAppointments appointment={item} />}
+                keyboardShouldPersistTaps="handled"
+                keyboardDismissMode="on-drag"
+                renderItem={({ item }) => (
+                    <CardAppointments appointment={item} />
+                )}
                 onEndReached={handleLoadMore}
                 onEndReachedThreshold={0.5}
                 refreshControl={
@@ -160,17 +176,21 @@ const ShowAppointments = () => {
                                 className={`text-center font-sans-bold text-lg ${
                                     isDark ? "text-slate-100" : "text-slate-800"
                                 }`}>
-                                {selectedFilter === "all"
-                                    ? "لا توجد لديك حجوزات حتى الآن"
-                                    : "لا توجد حجوزات بهذه الحالة"}
+                                {keyword?.trim()
+                                    ? `لا توجد نتائج مطابقة لـ "${keyword.trim()}"`
+                                    : selectedFilter === "all"
+                                      ? "لا توجد لديك حجوزات حتى الآن"
+                                      : "لا توجد حجوزات بهذه الحالة"}
                             </Text>
                             <Text className="mt-2 text-center font-sans-medium text-xs text-muted-foreground dark:text-slate-400 max-w-xs leading-5">
-                                {selectedFilter === "all"
-                                    ? "يمكنك استعراض قائمة الأطباء واختيار الطبيب المناسب لحجز موعد جديد بكل سهولة."
-                                    : "يمكنك تغيير الفلتر لعرض جميع الحجوزات الأخرى."}
+                                {keyword?.trim()
+                                    ? "تأكد من كتابة اسم الطبيب أو اسم المريض بشكل صحيح"
+                                    : selectedFilter === "all"
+                                      ? "يمكنك استعراض قائمة الأطباء واختيار الطبيب المناسب لحجز موعد جديد بكل سهولة."
+                                      : "يمكنك تغيير الفلتر لعرض جميع الحجوزات الأخرى."}
                             </Text>
 
-                            {selectedFilter === "all" && (
+                            {selectedFilter === "all" && !keyword?.trim() && (
                                 <Pressable
                                     onPress={() =>
                                         router.push("/(tabs)/doctors")
@@ -196,4 +216,4 @@ const ShowAppointments = () => {
     );
 };
 
-export default ShowAppointments;
+export default memo(ShowAppointments);

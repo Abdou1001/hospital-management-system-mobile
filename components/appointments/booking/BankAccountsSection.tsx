@@ -1,9 +1,9 @@
-import {BankAccount} from "@/api/bank-accounts.api";
-import {toast} from "@/lib/toast";
-import {Ionicons} from "@expo/vector-icons";
+import { BankAccount } from "@/api/bank-accounts.api";
+import { toast } from "@/lib/toast";
+import { Ionicons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
-import React from "react";
-import {ActivityIndicator, Image, Pressable, Text, View} from "react-native";
+import React, { memo } from "react";
+import { ActivityIndicator, Image, Pressable, Text, View } from "react-native";
 
 interface BankAccountsSectionProps {
     bankAccounts: BankAccount[];
@@ -20,7 +20,7 @@ const BankAccountsSection: React.FC<BankAccountsSectionProps> = ({
 }) => {
     const handleCopyAccountNumber = async (
         accountNumber: string,
-        bankName: string,
+        bankName: string
     ) => {
         await Clipboard.setStringAsync(accountNumber);
         toast.success(`تم نسخ رقم حساب ${bankName}`);
@@ -33,7 +33,7 @@ const BankAccountsSection: React.FC<BankAccountsSectionProps> = ({
                     className={`mb-2 font-sans-bold text-sm ${
                         isDark ? "text-slate-200" : "text-slate-700"
                     }`}
-                    style={{textAlign: "right"}}>
+                    style={{ textAlign: "right" }}>
                     الحسابات البنكية للتحويل
                 </Text>
                 <View
@@ -56,13 +56,13 @@ const BankAccountsSection: React.FC<BankAccountsSectionProps> = ({
                 className={`mb-2 font-sans-bold text-sm ${
                     isDark ? "text-slate-200" : "text-slate-700"
                 }`}
-                style={{textAlign: "right"}}>
+                style={{ textAlign: "right" }}>
                 الحسابات البنكية للتحويل
             </Text>
 
             <Text
                 className="mb-3 font-sans-medium text-xs leading-5 text-muted-foreground dark:text-slate-400"
-                style={{textAlign: "right"}}>
+                style={{ textAlign: "right" }}>
                 قم بتحويل المبلغ الإجمالي ({totalFee} ر.ي) إلى أحد الحسابات
                 التالية
             </Text>
@@ -73,34 +73,38 @@ const BankAccountsSection: React.FC<BankAccountsSectionProps> = ({
                     .map((account) => (
                         <View
                             key={account.bank_account_id}
-                            className={`overflow-hidden rounded-2xl border p-3 flex-row-reverse items-center gap-2 ${
+                            className={`flex-row-reverse items-center justify-between overflow-hidden rounded-2xl border p-3 ${
                                 isDark
                                     ? "border-slate-700 bg-slate-900/40"
                                     : "border-slate-200 bg-slate-50"
                             }`}>
-                            {/* شعار البنك إن وُجد */}
-                            {account.path_image && (
-                                <Image
-                                    source={{uri: account.path_image}}
-                                    className="size-10"
-                                    resizeMode="contain"
-                                    style={{
-                                        backgroundColor: isDark
-                                            ? "#1e293b"
-                                            : "#f8fafc",
-                                    }}
-                                />
-                            )}
+                            <View className="flex-row-reverse items-center gap-2">
+                                {/* شعار البنك إن وُجد */}
+                                {account.path_image && (
+                                    <Image
+                                        source={{ uri: account.path_image }}
+                                        className="size-7"
+                                        resizeMode="contain"
+                                        style={{
+                                            backgroundColor: isDark
+                                                ? "#1e293b"
+                                                : "#f8fafc",
+                                        }}
+                                    />
+                                )}
 
-                            {/* اسم البنك */}
-                            <View>
-                                <Text
-                                    className={`font-sans-bold text-xs ${
-                                        isDark ? "text-white" : "text-slate-800"
-                                    }`}
-                                    style={{textAlign: "right"}}>
-                                    {account.name}
-                                </Text>
+                                {/* اسم البنك */}
+                                <View>
+                                    <Text
+                                        className={`font-sans-bold text-xs ${
+                                            isDark
+                                                ? "text-white"
+                                                : "text-slate-800"
+                                        }`}
+                                        style={{ textAlign: "right" }}>
+                                        {account.name}
+                                    </Text>
+                                </View>
                             </View>
 
                             {/* رقم الحساب — اضغط للنسخ */}
@@ -108,22 +112,22 @@ const BankAccountsSection: React.FC<BankAccountsSectionProps> = ({
                                 onPress={() =>
                                     handleCopyAccountNumber(
                                         account.account_number,
-                                        account.name,
+                                        account.name
                                     )
                                 }
-                                className={`mt-3 flex-row-reverse items-center justify-between rounded-xl border px-1.5 py-2 ${
+                                className={`flex-row-reverse items-center justify-between rounded-xl border px-1.5 py-3 ${
                                     isDark
                                         ? "border-slate-600 bg-slate-800"
                                         : "border-slate-200 bg-white"
                                 }`}>
-                                <View className="flex-row-reverse items-center gap-2">
+                                <View className="flex-row-reverse items-center">
                                     <Text
-                                        className="font-sans-medium text-[10px] text-muted-foreground dark:text-slate-400"
-                                        style={{textAlign: "right"}}>
+                                        className="font-sans-medium text-[9px] text-muted-foreground dark:text-slate-400"
+                                        style={{ textAlign: "right" }}>
                                         رقم الحساب:
                                     </Text>
                                     <Text
-                                        className={`font-sans-bold text-base ${
+                                        className={`px-2 font-sans-bold text-base ${
                                             isDark
                                                 ? "text-white"
                                                 : "text-slate-800"
@@ -132,7 +136,7 @@ const BankAccountsSection: React.FC<BankAccountsSectionProps> = ({
                                         {account.account_number}
                                     </Text>
                                 </View>
-                                <View className="flex-row items-center gap-1 rounded-lg bg-main/10 px-1 py-1 mr-1">
+                                <View className="mr-1 flex-row items-center gap-1 rounded-lg bg-main/10 px-1.5 py-1.5">
                                     <Ionicons
                                         name="copy-outline"
                                         size={10}
@@ -150,4 +154,4 @@ const BankAccountsSection: React.FC<BankAccountsSectionProps> = ({
     );
 };
 
-export default BankAccountsSection;
+export default memo(BankAccountsSection);

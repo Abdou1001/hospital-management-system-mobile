@@ -1,11 +1,15 @@
-import {useAuth} from "@/hooks/auth/useAuth";
-import React from "react";
-import {ActivityIndicator, Text, View} from "react-native";
+import { useAuth } from "@/hooks/auth/useAuth";
+import React, { memo } from "react";
+import { ActivityIndicator, Text, View } from "react-native";
 import LoginMessage from "./LoginMessage";
 import ShowAppointments from "./ShowAppointments";
 
-const AppointmentsSection = () => {
-    const {isAuthenticated, user, isLoading} = useAuth();
+interface AppointmentsSectionProps {
+    keyword?: string;
+}
+
+const AppointmentsSection: React.FC<AppointmentsSectionProps> = ({ keyword }) => {
+    const { isAuthenticated, user, isLoading } = useAuth();
 
     if (isLoading)
         return (
@@ -18,9 +22,13 @@ const AppointmentsSection = () => {
         );
     return (
         <View className="flex-1 mt-3">
-            {isAuthenticated && user ? <ShowAppointments /> : <LoginMessage />}
+            {isAuthenticated && user ? (
+                <ShowAppointments keyword={keyword} />
+            ) : (
+                <LoginMessage />
+            )}
         </View>
     );
 };
 
-export default AppointmentsSection;
+export default memo(AppointmentsSection);

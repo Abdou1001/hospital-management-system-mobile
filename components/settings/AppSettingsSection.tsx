@@ -82,35 +82,6 @@ const AppSettingsSection = () => {
                     </View>
                 </TouchableOpacity>
 
-                {/* Language Row */}
-                <TouchableOpacity className="flex-row-reverse items-center justify-between p-4">
-                    <View className="flex-row-reverse items-center gap-3">
-                        <View className="size-10 rounded-xl bg-purple-500/10 items-center justify-center">
-                            <Ionicons
-                                name="globe-outline"
-                                size={20}
-                                color="#a855f7"
-                            />
-                        </View>
-                        <View className="items-end">
-                            <Text
-                                className={`text-base font-sans-bold ${
-                                    isDark ? "text-slate-100" : "text-slate-900"
-                                }`}>
-                                لغة التطبيق
-                            </Text>
-                            <Text className="text-xs font-sans-medium text-muted-foreground dark:text-slate-400">
-                                العربية
-                            </Text>
-                        </View>
-                    </View>
-                    <Ionicons
-                        name="chevron-back-outline"
-                        size={18}
-                        color={isDark ? "#64748b" : "#94a3b8"}
-                    />
-                </TouchableOpacity>
-
                 {/* App Version */}
                 <View className="flex-row-reverse items-center justify-between p-4">
                     <View className="flex-row-reverse items-center gap-3">

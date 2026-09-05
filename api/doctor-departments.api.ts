@@ -1,5 +1,8 @@
 import api from "@/lib/axios";
-import { AssignDoctorDepartmentPayload, DoctorDepartmentResponse, DoctorDepartmentsResponse, UpdateDoctorDepartmentPayload } from "@/types/data";
+import {
+    DoctorDepartmentResponse,
+    DoctorDepartmentsResponse,
+} from "@/validation/doctor-departments/schemas/doctor-department.schema";
 
 /* ============================
    Types
@@ -30,40 +33,6 @@ export async function getOneDoctorDepartment(id: number) {
     return data;
 }
 
-/* ============================
-   Assign Doctor To Department
-============================ */
-
-export async function assignDoctorToDepartment(
-    body: AssignDoctorDepartmentPayload,
-) {
-    const {data} = await api.post("/doctor-departments", body);
-
-    return data;
-}
-
-/* ============================
-   Update Doctor Department
-============================ */
-
-export async function updateDoctorDepartment(
-    id: number,
-    body: UpdateDoctorDepartmentPayload,
-) {
-    const {data} = await api.put(`/doctor-departments/${id}`, body);
-
-    return data;
-}
-
-/* ============================
-   Delete Doctor Department
-============================ */
-
-export async function deleteDoctorDepartment(id: number) {
-    const {data} = await api.delete(`/doctor-departments/${id}`);
-
-    return data;
-}
 
 /* ============================
    Get Doctors By Department

@@ -1,25 +1,30 @@
 import { Ionicons } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker";
-import React from "react";
+import React, { memo } from "react";
+import { Control, useWatch } from "react-hook-form";
 import { Image, Pressable, Text, View } from "react-native";
+import { BookingAppointmentFormValues } from "@/validation/appointments/schemas/booking-appointment.schema";
 
 interface PaymentReceiptUploaderProps {
-    paymentImage: {
-        uri: string;
-        name: string;
-        type: string;
-    } | null;
-    setPaymentImage: (img: { uri: string; name: string; type: string } | null) => void;
-    errors: Record<string, string>;
+    control: Control<BookingAppointmentFormValues>;
+    onSelectImage: (
+        img: { uri: string; name: string; type: string } | null
+    ) => void;
+    errorMessage?: string;
     isDark: boolean;
 }
 
 const PaymentReceiptUploader: React.FC<PaymentReceiptUploaderProps> = ({
-    paymentImage,
-    setPaymentImage,
-    errors,
+    control,
+    onSelectImage,
+    errorMessage,
     isDark,
 }) => {
+    const paymentImage = useWatch({
+        control,
+        name: "payment_receipt",
+    });
+
     const pickImage = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.Images,
@@ -32,7 +37,7 @@ const PaymentReceiptUploader: React.FC<PaymentReceiptUploaderProps> = ({
             const fileName = asset.uri.split("/").pop() || "payment.jpg";
             const fileType = asset.mimeType || "image/jpeg";
 
-            setPaymentImage({
+            onSelectImage({
                 uri: asset.uri,
                 name: fileName,
                 type: fileType,
@@ -61,16 +66,24 @@ const PaymentReceiptUploader: React.FC<PaymentReceiptUploaderProps> = ({
                     <Image
                         source={{ uri: paymentImage.uri }}
                         className="w-full rounded-2xl"
-                        style={{ height: undefined, aspectRatio: undefined, minHeight: 250 }}
+                        style={{
+                            height: undefined,
+                            aspectRatio: undefined,
+                            minHeight: 250,
+                        }}
                         resizeMode="contain"
                     />
                     <Pressable
-                        onPress={() => setPaymentImage(null)}
+                        onPress={() => onSelectImage(null)}
                         className="absolute left-2 top-2 size-8 items-center justify-center rounded-full bg-red-500 shadow-lg">
                         <Ionicons name="close" size={18} color="#ffffff" />
                     </Pressable>
                     <View className="absolute bottom-2 right-2 flex-row-reverse items-center gap-1 rounded-full bg-green-600/90 px-3 py-1">
-                        <Ionicons name="checkmark-circle" size={14} color="#ffffff" />
+                        <Ionicons
+                            name="checkmark-circle"
+                            size={14}
+                            color="#ffffff"
+                        />
                         <Text className="font-sans-bold text-xs text-white">
                             تم رفع السند
                         </Text>
@@ -80,14 +93,18 @@ const PaymentReceiptUploader: React.FC<PaymentReceiptUploaderProps> = ({
                 <Pressable
                     onPress={pickImage}
                     className={`w-full items-center justify-center rounded-2xl border-2 border-dashed py-8 ${
-                        errors.payment_receipt
+                        errorMessage
                             ? "border-red-400 bg-red-50/10"
                             : isDark
                               ? "border-slate-600 bg-slate-900/40"
                               : "border-slate-300 bg-slate-50"
                     }`}>
                     <View className="mb-3 size-14 items-center justify-center rounded-full bg-main/10">
-                        <Ionicons name="cloud-upload-outline" size={28} color="#10b981" />
+                        <Ionicons
+                            name="cloud-upload-outline"
+                            size={28}
+                            color="#10b981"
+                        />
                     </View>
                     <Text
                         className={`font-sans-bold text-sm ${
@@ -101,13 +118,15 @@ const PaymentReceiptUploader: React.FC<PaymentReceiptUploaderProps> = ({
                 </Pressable>
             )}
 
-            {errors.payment_receipt ? (
-                <Text className="mt-1 font-sans-medium text-xs text-red-500" style={{ textAlign: "right" }}>
-                    {errors.payment_receipt}
+            {errorMessage ? (
+                <Text
+                    className="mt-1 font-sans-medium text-xs text-red-500"
+                    style={{ textAlign: "right" }}>
+                    {errorMessage}
                 </Text>
             ) : null}
         </View>
     );
 };
 
-export default PaymentReceiptUploader;
+export default memo(PaymentReceiptUploader);

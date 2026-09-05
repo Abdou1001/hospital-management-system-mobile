@@ -1,5 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
-import React from "react";
+import React, { memo } from "react";
 import { Modal, Pressable, Text, View } from "react-native";
 
 interface SuccessModalProps {
@@ -15,6 +15,8 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
     onGoBack,
     isDark,
 }) => {
+    if (!visible) return null;
+
     return (
         <Modal
             visible={visible}
@@ -31,7 +33,11 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
                     {/* أيقونة النجاح */}
                     <View className="mb-5 items-center">
                         <View className="size-20 items-center justify-center rounded-full border-2 border-green-500/20 bg-green-500/10">
-                            <Ionicons name="checkmark-circle" size={48} color="#10b981" />
+                            <Ionicons
+                                name="checkmark-circle"
+                                size={48}
+                                color="#10b981"
+                            />
                         </View>
                     </View>
 
@@ -42,9 +48,9 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
                         تم إرسال طلب الحجز بنجاح
                     </Text>
 
-                    <Text
-                        className="mt-3 text-center font-sans-medium text-sm leading-6 text-muted-foreground dark:text-slate-400">
-                        سيتم مراجعة طلبك الآن من موظف الاستقبال وسيتم تأكيد حجزك قريباً.
+                    <Text className="mt-3 text-center font-sans-medium text-sm leading-6 text-muted-foreground dark:text-slate-400">
+                        سيتم مراجعة طلبك الآن من موظف الاستقبال وسيتم تأكيد حجزك
+                        قريباً.
                     </Text>
 
                     {/* ملاحظة السند */}
@@ -55,7 +61,11 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
                                 : "border-green-200 bg-green-50"
                         }`}>
                         <View className="flex-row-reverse items-start gap-2">
-                            <Ionicons name="document-text-outline" size={18} color="#10b981" />
+                            <Ionicons
+                                name="document-text-outline"
+                                size={18}
+                                color="#10b981"
+                            />
                             <Text
                                 className="flex-1 font-sans-medium text-xs leading-5 text-green-700 dark:text-green-400"
                                 style={{ textAlign: "right" }}>
@@ -85,7 +95,8 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
                             className={`h-12 items-center justify-center rounded-xl ${
                                 isDark ? "bg-slate-800" : "bg-slate-100"
                             }`}>
-                            <Text className={`font-sans-bold text-sm ${isDark ? "text-slate-300" : "text-slate-600"}`}>
+                            <Text
+                                className={`font-sans-bold text-sm ${isDark ? "text-slate-300" : "text-slate-600"}`}>
                                 العودة للطبيب
                             </Text>
                         </Pressable>
@@ -96,4 +107,4 @@ const SuccessModal: React.FC<SuccessModalProps> = ({
     );
 };
 
-export default SuccessModal;
+export default memo(SuccessModal);

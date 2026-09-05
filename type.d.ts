@@ -1,6 +1,12 @@
 import type {ImageSourcePropType} from "react-native";
 
 declare global {
+    interface AppTab {
+        name: string;
+        title: string;
+        icon: any;
+    }
+
     interface DepartmentItem {
         id: string | number;
         name: string;
@@ -19,14 +25,12 @@ declare global {
         isLoading?: boolean;
         limit?: number;
     }
-    
 
     interface ShowDoctorsProps {
         data?: any[];
         isLoading?: boolean;
         limit?: number;
     }
-    
 }
 
 export {};

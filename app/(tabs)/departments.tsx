@@ -4,12 +4,16 @@ import SectionTitle from "@/components/shared/SectionTitle";
 import UpperSection from "@/components/shared/UpperSection";
 import {icons} from "@/constants/icons";
 import {useDepartments} from "@/hooks/departments/useDepartments";
+import {useDebounce} from "@/hooks/shared/useDebounce";
+import {useThemeStore} from "@/store/theme.store";
 import {Department} from "@/validation/departments/schemas/department.schema";
+import { Ionicons } from "@expo/vector-icons";
 import {styled} from "nativewind";
-import React from "react";
+import React, {useCallback, useMemo, useState} from "react";
 import {
     ActivityIndicator,
     FlatList,
+    Pressable,
     RefreshControl,
     Text,
     View,
@@ -19,31 +23,51 @@ import {SafeAreaView as RNSafeAreaView} from "react-native-safe-area-context";
 const SafeAreaView = styled(RNSafeAreaView);
 
 const Departments = () => {
+    const {isDark} = useThemeStore();
+    const [searchQuery, setSearchQuery] = useState("");
+    const debouncedSearch = useDebounce(searchQuery, 400);
+
+    const queryParams = useMemo(() => {
+        const trimmed = debouncedSearch.trim();
+        return {
+            limit: 12,
+            ...(trimmed ? {keyword: trimmed} : {}),
+        };
+    }, [debouncedSearch]);
+
     const {
         data,
         isLoading,
+        isFetching,
         isError,
         refetch,
         isRefetching,
         hasNextPage,
         fetchNextPage,
         isFetchingNextPage,
-    } = useDepartments({limit: 12});
+    } = useDepartments(queryParams);
 
-    const departments: Department[] =
-        data?.pages.flatMap((page) => page.results) ?? [];
+    const departments: Department[] = useMemo(
+        () => data?.pages.flatMap((page) => page.results) ?? [],
+        [data],
+    );
 
-    const handleLoadMore = () => {
+    const handleLoadMore = useCallback(() => {
         if (hasNextPage && !isFetchingNextPage) {
             fetchNextPage();
         }
-    };
+    }, [hasNextPage, isFetchingNextPage, fetchNextPage]);
 
     return (
         <SafeAreaView className="flex-1 bg-background dark:bg-slate-900 p-5 pb-20">
             <View className="mb-4">
-                {/* الهيدر */}
-                <UpperSection />
+                {/* الهيدر والبحث */}
+                <UpperSection
+                    placeholder="ابحث عن قسم طبي..."
+                    value={searchQuery}
+                    onChangeText={setSearchQuery}
+                    isLoading={isFetching && !isLoading && !isFetchingNextPage}
+                />
 
                 {/* العنوان */}
                 <SectionTitle title="الأقسام الطبية" icon={icons.departments} />
@@ -58,6 +82,8 @@ const Departments = () => {
                     marginBottom: 16,
                 }}
                 showsVerticalScrollIndicator={false}
+                keyboardShouldPersistTaps="handled"
+                keyboardDismissMode="on-drag"
                 renderItem={({item}) => (
                     <CardDepartment
                         id={item.depart_id}
@@ -79,23 +105,50 @@ const Departments = () => {
                     isLoading ? (
                         <View className="py-20 items-center justify-center">
                             <ActivityIndicator size="large" color="#16a34a" />
-                            <Text className="mt-3 font-sans-medium text-xs text-muted-foreground dark:text-slate-400">
+                            <Text
+                                className={`mt-3 font-sans-medium text-xs ${isDark ? "text-slate-400" : "text-muted-foreground"}`}>
                                 جارٍ تحميل الأقسام...
                             </Text>
                         </View>
                     ) : isError ? (
-                        <View className="mt-4 items-center justify-center rounded-3xl border border-red-500/20 bg-red-50/10 p-6">
-                            <Text className="text-center font-sans-bold text-base text-red-500">
+                        <View className="py-16 items-center justify-center rounded-3xl border border-red-500/20 bg-red-50/10 p-6">
+                            <Ionicons
+                                name="alert-circle-outline"
+                                size={40}
+                                color="#ef4444"
+                            />
+                            <Text className="mt-3 text-center font-sans-bold text-base text-red-500">
                                 حدث خطأ أثناء تحميل الأقسام
                             </Text>
+                            <Pressable
+                                onPress={() => refetch()}
+                                className="mt-4 rounded-xl bg-red-500 px-5 py-2.5">
+                                <Text className="font-sans-bold text-xs text-white">
+                                    إعادة المحاولة
+                                </Text>
+                            </Pressable>
                         </View>
                     ) : (
-                        <View className="mt-4 items-center justify-center rounded-3xl border border-border bg-card px-6 py-8">
-                            <Text className="mt-3 text-lg font-sans-bold text-primary">
-                                لا توجد أقسام
+                        <View
+                            className={`mt-4 items-center justify-center rounded-3xl border ${isDark ? "border-white/50 bg-slate-800" : "border-border bg-card"} px-6 py-8`}>
+                            <View className="size-20 rounded-full bg-main/10 border-2 border-main/20 items-center justify-center mb-4">
+                                <Ionicons
+                                    name="grid-outline"
+                                    size={36}
+                                    color="#10b981"
+                                />
+                            </View>
+                            <Text
+                                className={`mt-3 text-lg font-sans-bold ${isDark ? "text-white" : "text-primary"}`}>
+                                {debouncedSearch.trim()
+                                    ? `لا توجد نتائج مطابقة لـ "${debouncedSearch.trim()}"`
+                                    : "لا توجد أقسام"}
                             </Text>
-                            <Text className="mt-1 text-center text-sm font-sans-medium text-muted-foreground">
-                                لا توجد أقسام متاحة حاليًا
+                            <Text
+                                className={`mt-1 text-center text-sm font-sans-medium ${isDark ? "text-slate-400" : "text-muted-foreground"}`}>
+                                {debouncedSearch.trim()
+                                    ? "تأكد من كتابة اسم القسم بشكل صحيح"
+                                    : "لا توجد أقسام متاحة حاليًا"}
                             </Text>
                         </View>
                     )

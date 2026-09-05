@@ -1,7 +1,8 @@
 import { Stack } from "expo-router";
 import React, { useEffect } from "react";
 import { View } from "react-native";
-import ToastContainer from "@/components/ui/ToastContainer";
+import Toast from "react-native-toast-message";
+import { toastConfig } from "@/components/ui/ToastConfig";
 import { useCurrentUser } from "@/hooks/auth/useCurrentUser";
 import { useAuthStore } from "@/store/auth.store";
 import { useThemeStore } from "../theme.store";
@@ -33,7 +34,7 @@ const AppContent = () => {
                     headerShown: false,
                 }}
             />
-            <ToastContainer />
+            <Toast config={toastConfig} />
         </View>
     );
 };

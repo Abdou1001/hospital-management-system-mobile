@@ -1,7 +1,9 @@
 import {Ionicons} from "@expo/vector-icons";
+import {zodResolver} from "@hookform/resolvers/zod";
 import {useLocalSearchParams, useRouter} from "expo-router";
 import {styled} from "nativewind";
-import React, {useMemo, useState} from "react";
+import React, {useCallback, useMemo, useState} from "react";
+import {useForm} from "react-hook-form";
 import {
     ActivityIndicator,
     Image,
@@ -9,7 +11,6 @@ import {
     Pressable,
     ScrollView,
     Text,
-    TextInput,
     View,
 } from "react-native";
 import {SafeAreaView as RNSafeAreaView} from "react-native-safe-area-context";
@@ -23,9 +24,14 @@ import {useDoctorSchedulesByDoctor} from "@/hooks/doctorSchedules/useDoctorSched
 import {useBankAccounts} from "@/hooks/shared/useBankAccounts";
 import {toast} from "@/lib/toast";
 import {useThemeStore} from "@/store/theme.store";
+import {
+    BookingAppointmentFormValues,
+    bookingAppointmentSchema,
+} from "@/validation/appointments/schemas/booking-appointment.schema";
 
 import AppointmentCalendar from "@/components/appointments/booking/AppointmentCalendar";
 import BankAccountsSection from "@/components/appointments/booking/BankAccountsSection";
+import BookingNotesInput from "@/components/appointments/booking/BookingNotesInput";
 import DoctorMiniCard from "@/components/appointments/booking/DoctorMiniCard";
 import FeesSummary from "@/components/appointments/booking/FeesSummary";
 import PatientInfoForm from "@/components/appointments/booking/PatientInfoForm";
@@ -39,7 +45,7 @@ const AppointmentBookingScreen = () => {
     const {id} = useLocalSearchParams<{id: string}>();
     const router = useRouter();
     const {isDark} = useThemeStore();
-    const {user, isAuthenticated} = useAuth();
+    const {user, isAuthenticated, isLoading} = useAuth();
 
     const doctorId = Number(id);
     const {data: doctor, isLoading: isDoctorLoading} = useDoctor(doctorId);
@@ -48,111 +54,132 @@ const AppointmentBookingScreen = () => {
     // جلب الدوامات من API مستقل
     const {data: schedulesData, isLoading: isSchedulesLoading} =
         useDoctorSchedulesByDoctor(doctorId);
-    const schedules = schedulesData?.results ?? [];
+    const schedules = useMemo(
+        () => schedulesData?.results ?? [],
+        [schedulesData?.results],
+    );
 
     // جلب الحسابات البنكية
     const {data: bankAccountsData, isLoading: isBankAccountsLoading} =
         useBankAccounts();
-    const bankAccounts = bankAccountsData?.results ?? [];
+    const bankAccounts = useMemo(
+        () => bankAccountsData?.results ?? [],
+        [bankAccountsData?.results],
+    );
 
     // ============================
-    // حالات النموذج
+    // react-hook-form إدارة النموذج
     // ============================
-    const [patientName, setPatientName] = useState(user?.full_name || "");
-    const [patientPhone, setPatientPhone] = useState(
-        user?.phone_number?.replace(/^967/, "") || "",
-    );
-    const [patientAge, setPatientAge] = useState("");
-    const [patientGender, setPatientGender] = useState<"ذكر" | "أنثى">(
-        user?.gender || "ذكر",
-    );
-    const [notes, setNotes] = useState("");
-    const [selectedScheduleId, setSelectedScheduleId] = useState<number | null>(
-        null,
-    );
-    const [appointmentDate, setAppointmentDate] = useState("");
-    const [paymentImage, setPaymentImage] = useState<{
-        uri: string;
-        name: string;
-        type: string;
-    } | null>(null);
-    const [errors, setErrors] = useState<Record<string, string>>({});
-    const [showScheduleDropdown, setShowScheduleDropdown] = useState(false);
+    const {
+        control,
+        handleSubmit,
+        setValue,
+        formState: {errors},
+    } = useForm<BookingAppointmentFormValues>({
+        resolver: zodResolver(bookingAppointmentSchema),
+        defaultValues: {
+            patient_name: user?.full_name || "",
+            patient_phone: user?.phone_number?.replace(/^967/, "") || "",
+            patient_age: "",
+            patient_gender: (user?.gender as "ذكر" | "أنثى") || "ذكر",
+            notes: "",
+            schedule_id: undefined as any,
+            appointment_date: "",
+            payment_receipt: null,
+        },
+    });
+
+    console.log("rernder");
+
     const [showSuccessModal, setShowSuccessModal] = useState(false);
-    const [successData, setSuccessData] = useState<any>(null);
 
     // ============================
-    // حساب الدوام المختار
+    // دوال اختيار الحقول بكفاءة
     // ============================
-    const selectedSchedule = useMemo(() => {
-        if (!selectedScheduleId) return null;
-        return (
-            schedules.find((s) => s.schedule_id === selectedScheduleId) ?? null
-        );
-    }, [schedules, selectedScheduleId]);
+    const handleSelectSchedule = useCallback(
+        (schedId: number) => {
+            setValue("schedule_id", schedId, {shouldValidate: true});
+            setValue("appointment_date", "", {shouldValidate: true});
+        },
+        [setValue],
+    );
+
+    const handleSelectDate = useCallback(
+        (date: string) => {
+            setValue("appointment_date", date, {shouldValidate: true});
+        },
+        [setValue],
+    );
+
+    const handleSelectPaymentImage = useCallback(
+        (img: {uri: string; name: string; type: string} | null) => {
+            setValue("payment_receipt", img, {shouldValidate: true});
+        },
+        [setValue],
+    );
+
+    const handleViewAppointments = useCallback(() => {
+        setShowSuccessModal(false);
+        router.push("/(tabs)/appointments" as any);
+    }, [router]);
+
+    const handleGoBack = useCallback(() => {
+        setShowSuccessModal(false);
+        router.back();
+    }, [router]);
 
     // ============================
     // التحقق والإرسال
     // ============================
-    const handleSubmit = () => {
-        Keyboard.dismiss();
-        const newErrors: Record<string, string> = {};
-
-        if (!patientName.trim()) {
-            newErrors.patient_name = "يرجى إدخال اسم المريض الكامل";
-        }
-        if (!patientPhone.trim() || patientPhone.trim().length < 9) {
-            newErrors.patient_phone = "يرجى إدخال رقم هاتف صحيح";
-        }
-        if (
-            !patientAge.trim() ||
-            isNaN(Number(patientAge)) ||
-            Number(patientAge) <= 0
-        ) {
-            newErrors.patient_age = "يرجى إدخال عمر صحيح";
-        }
-        if (!selectedScheduleId) {
-            newErrors.schedule_id = "يرجى اختيار موعد الدوام";
-        }
-        if (!appointmentDate) {
-            newErrors.appointment_date = "يرجى اختيار تاريخ الموعد";
-        }
-        if (!paymentImage) {
-            newErrors.payment_receipt = "يرجى رفع صورة سند الدفع";
-        }
-
-        setErrors(newErrors);
-
-        if (Object.keys(newErrors).length > 0) {
-            const firstMsg = Object.values(newErrors)[0];
-            toast.error(firstMsg);
-            return;
-        }
-
-        createAppointment(
-            {
-                patient_name: patientName.trim(),
-                patient_phone: patientPhone.trim(),
-                patient_age: Number(patientAge),
-                patient_gender: patientGender,
-                appointment_date: appointmentDate,
-                schedule_id: selectedScheduleId!,
-                notes: notes.trim() || undefined,
-                payment_receipt: paymentImage || undefined,
-            },
-            {
-                onSuccess: (data) => {
-                    setSuccessData(data);
-                    setShowSuccessModal(true);
+    const onSubmit = useCallback(
+        (data: BookingAppointmentFormValues) => {
+            Keyboard.dismiss();
+            createAppointment(
+                {
+                    patient_name: data.patient_name.trim(),
+                    patient_phone: data.patient_phone.trim(),
+                    patient_age: Number(data.patient_age),
+                    patient_gender: data.patient_gender,
+                    appointment_date: data.appointment_date,
+                    schedule_id: data.schedule_id,
+                    notes: data.notes?.trim() || undefined,
+                    payment_receipt: data.payment_receipt || undefined,
                 },
-            },
-        );
-    };
+                {
+                    onSuccess: () => {
+                        setShowSuccessModal(true);
+                    },
+                },
+            );
+        },
+        [createAppointment],
+    );
+
+    const onError = useCallback((formErrors: typeof errors) => {
+        Keyboard.dismiss();
+        const firstKey = Object.keys(
+            formErrors,
+        )[0] as keyof BookingAppointmentFormValues;
+        if (firstKey && formErrors[firstKey]?.message) {
+            toast.error(formErrors[firstKey]!.message as string);
+        }
+    }, []);
+
+    // رسوم الطبيب
+    const appFeeRaw = process.env.PLATFORM_FEE || "500";
+    const appFee = Number(appFeeRaw) || 0;
+    const doctorFee = doctor?.consultation_fee || 0;
+    const totalFee = doctorFee + appFee;
+
+    const imageSource = useMemo(
+        () => (doctor ? getDoctorImageSource(doctor) : null),
+        [doctor],
+    );
 
     // ============================
     // حالة التحميل
     // ============================
-    if (isDoctorLoading) {
+    if (isDoctorLoading || isLoading) {
         return (
             <View className="flex-1 items-center justify-center bg-background dark:bg-slate-900">
                 <ActivityIndicator size="large" color="#10b981" />
@@ -221,10 +248,10 @@ const AppointmentBookingScreen = () => {
                         </Text>
                     </Pressable>
 
-                    {/* زر تسجيل انشاء حساب */}
+                    {/* زر إنشاء حساب جديد */}
                     <Pressable
                         onPress={() => router.push("/(auth)/register")}
-                        className="mt-5 w-full items-center justify-center rounded-xl border-2 py-3.5 border-main bg-transparent ">
+                        className="mt-5 w-full items-center justify-center rounded-xl border-2 border-main bg-transparent py-3.5 active:opacity-80">
                         <Text className="text-base font-sans-bold text-main dark:text-emerald-400">
                             إنشاء حساب جديد
                         </Text>
@@ -234,25 +261,19 @@ const AppointmentBookingScreen = () => {
         );
     }
 
-    // رسوم الطبيب
-    const appFeeRaw = process.env.PLATFORM_FEE || "500";
-    const appFee = Number(appFeeRaw) || 0;
-    const doctorFee = doctor.consultation_fee || 0;
-    const totalFee = doctorFee + appFee;
-
-    const imageSource = getDoctorImageSource(doctor);
-
     return (
         <View className="flex-1 bg-background dark:bg-slate-900">
             <ScrollView
                 className="flex-1"
-                contentContainerStyle={{paddingBottom: 40}}
+                contentContainerStyle={{flexGrow: 1, paddingBottom: 50}}
                 showsVerticalScrollIndicator={false}
-                keyboardShouldPersistTaps="handled">
+                keyboardShouldPersistTaps="handled"
+                keyboardDismissMode="on-drag"
+                nestedScrollEnabled={true}>
                 <SafeAreaView className="p-5">
                     {/* ============================
-                        الهيدر
-                    ============================ */}
+                            الهيدر
+                        ============================ */}
                     <View className="mb-4 flex-row items-center justify-between">
                         <Pressable
                             onPress={() => router.back()}
@@ -286,8 +307,8 @@ const AppointmentBookingScreen = () => {
                     />
 
                     {/* ============================
-                        كارت نموذج الحجز
-                    ============================ */}
+                            كارت نموذج الحجز
+                        ============================ */}
                     <View
                         className={`rounded-3xl border p-5 shadow-sm ${
                             isDark
@@ -309,14 +330,7 @@ const AppointmentBookingScreen = () => {
 
                         {/* حقول بيانات المريض */}
                         <PatientInfoForm
-                            patientName={patientName}
-                            setPatientName={setPatientName}
-                            patientPhone={patientPhone}
-                            setPatientPhone={setPatientPhone}
-                            patientAge={patientAge}
-                            setPatientAge={setPatientAge}
-                            patientGender={patientGender}
-                            setPatientGender={setPatientGender}
+                            control={control}
                             errors={errors}
                             isDark={isDark}
                         />
@@ -325,58 +339,20 @@ const AppointmentBookingScreen = () => {
                         <SchedulePicker
                             schedules={schedules}
                             isLoading={isSchedulesLoading}
-                            selectedScheduleId={selectedScheduleId}
-                            setSelectedScheduleId={setSelectedScheduleId}
-                            setAppointmentDate={setAppointmentDate}
-                            showDropdown={showScheduleDropdown}
-                            setShowDropdown={setShowScheduleDropdown}
-                            errors={errors}
+                            control={control}
+                            onSelectSchedule={handleSelectSchedule}
+                            errorMessage={errors.schedule_id?.message}
                             isDark={isDark}
                         />
 
                         {/* التقويم لاختيار التاريخ */}
-                        {selectedSchedule && (
-                            <AppointmentCalendar
-                                selectedDayOfWeek={selectedSchedule.day_of_week}
-                                appointmentDate={appointmentDate}
-                                setAppointmentDate={setAppointmentDate}
-                                errors={errors}
-                                isDark={isDark}
-                            />
-                        )}
-
-                        {/* ملاحظات */}
-                        <View className="mt-5">
-                            <Text
-                                className={`mb-2 font-sans-bold text-sm ${
-                                    isDark ? "text-slate-200" : "text-slate-700"
-                                }`}
-                                style={{textAlign: "right"}}>
-                                ملاحظات ( اختياري )
-                            </Text>
-                            <View
-                                className={`w-full rounded-2xl border px-4 py-3 ${
-                                    isDark
-                                        ? "border-slate-700 bg-slate-900/60"
-                                        : "border-slate-200 bg-slate-50"
-                                }`}>
-                                <TextInput
-                                    value={notes}
-                                    onChangeText={setNotes}
-                                    placeholder="أكتب ملاحظات إضافية عن الحالة (مثل: أعاني من ألم...)"
-                                    placeholderTextColor={
-                                        isDark ? "#64748b" : "#94a3b8"
-                                    }
-                                    multiline
-                                    numberOfLines={3}
-                                    textAlignVertical="top"
-                                    className={`font-sans-medium text-sm leading-6 ${
-                                        isDark ? "text-white" : "text-slate-900"
-                                    }`}
-                                    style={{textAlign: "right", minHeight: 80}}
-                                />
-                            </View>
-                        </View>
+                        <AppointmentCalendar
+                            schedules={schedules}
+                            control={control}
+                            onSelectDate={handleSelectDate}
+                            errorMessage={errors.appointment_date?.message}
+                            isDark={isDark}
+                        />
 
                         {/* الحسابات البنكية */}
                         <BankAccountsSection
@@ -388,11 +364,14 @@ const AppointmentBookingScreen = () => {
 
                         {/* رفع سند الدفع */}
                         <PaymentReceiptUploader
-                            paymentImage={paymentImage}
-                            setPaymentImage={setPaymentImage}
-                            errors={errors}
+                            control={control}
+                            onSelectImage={handleSelectPaymentImage}
+                            errorMessage={errors.payment_receipt?.message}
                             isDark={isDark}
                         />
+
+                        {/* ملاحظات */}
+                        <BookingNotesInput control={control} isDark={isDark} />
 
                         {/* ملاحظة مهمة حول سند الدفع */}
                         <View
@@ -417,9 +396,12 @@ const AppointmentBookingScreen = () => {
                                         className="mt-1 font-sans-medium text-xs leading-5 text-amber-600 dark:text-amber-300"
                                         style={{textAlign: "right"}}>
                                         • حافظ على سند الدفع وأحضره معك عند
-                                        مراجعة الطبيب{"\n"}• في حالة إلغاء الحجز
-                                        أو عدم الحضور، يمكنك إعادة التسجيل أو
-                                        إحضار السند لاسترجاع المبلغ
+                                        مراجعة الطبيب{"\n"}
+                                        • اذا كان موعدك ساخداكثر من يومين سيتم مراجعة طلبك قبل الموعد بيوم و سيتم ارسال لك اشعار
+                                        {"\n"}
+                                        وأحضره معك عند • في حالة إلغاء الحجز أو
+                                        عدم الحضور، يمكنك إعادة التسجيل أو إحضار
+                                        السند لاسترجاع المبلغ
                                     </Text>
                                 </View>
                             </View>
@@ -435,11 +417,11 @@ const AppointmentBookingScreen = () => {
 
                         {/* زر تأكيد الحجز */}
                         <Pressable
-                            onPress={handleSubmit}
+                            onPress={handleSubmit(onSubmit, onError)}
                             disabled={isPending}
                             className={`mt-6 h-14 items-center justify-center rounded-2xl shadow-md ${
                                 isPending ? "bg-main/60" : "bg-main"
-                            }`}>
+                            } active:opacity-90`}>
                             {isPending ? (
                                 <ActivityIndicator
                                     size="small"
@@ -458,14 +440,8 @@ const AppointmentBookingScreen = () => {
             {/* مودال النجاح */}
             <SuccessModal
                 visible={showSuccessModal}
-                onViewAppointments={() => {
-                    setShowSuccessModal(false);
-                    router.push("/(tabs)/appointments" as any);
-                }}
-                onGoBack={() => {
-                    setShowSuccessModal(false);
-                    router.back();
-                }}
+                onViewAppointments={handleViewAppointments}
+                onGoBack={handleGoBack}
                 isDark={isDark}
             />
         </View>

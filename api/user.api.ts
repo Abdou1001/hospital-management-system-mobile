@@ -35,7 +35,7 @@ export async function getUsers(
 export async function updateMyProfile(
     value: UpdateMyProfileSchema,
 ) {
-    const {data} = await api.patch("/users/profile", value);
+    const {data} = await api.put("/users/profile", value);
     return data;
 }
 
@@ -55,18 +55,4 @@ export async function changePassword(
     return data;
 }
 
-export async function changeStatusUsers(id: number) {
-    const {data} = await api.patch(`/users/${id}/status`);
-    return data;
-}
 
-export async function changeRoleUsers(
-    id: number,
-    role: "user" | "admin" | "reception",
-) {
-    const {data} = await api.patch(`/users/${id}/role`, {
-        role,
-    });
-
-    return data;
-}

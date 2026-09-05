@@ -1,16 +1,30 @@
-import {icons} from "@/constants/icons";
-import React from "react";
-import {View} from "react-native";
+import { icons } from "@/constants/icons";
+import React, { memo, useMemo } from "react";
+import { View } from "react-native";
 import TitleSection from "./TitleSection";
 import ShowDoctors from "../doctors/ShowDoctors";
 import { useDoctors } from "@/hooks/doctors/useDoctors";
 
-const DoctorSection = () => {
-    const { data, isLoading } = useDoctors({ limit: 8 });
+interface DoctorSectionProps {
+    keyword?: string;
+}
 
-    const apiDoctors =
-        data?.pages.flatMap((page) => page.results) ?? [];
-        
+const DoctorSection: React.FC<DoctorSectionProps> = ({ keyword }) => {
+    const queryParams = useMemo(() => {
+        const trimmed = keyword?.trim();
+        return {
+            limit: 8,
+            ...(trimmed ? { keyword: trimmed } : {}),
+        };
+    }, [keyword]);
+
+    const { data, isLoading } = useDoctors(queryParams);
+
+    const apiDoctors = useMemo(
+        () => data?.pages.flatMap((page) => page.results) ?? [],
+        [data]
+    );
+
     return (
         <View className="mt-5">
             <TitleSection
@@ -24,4 +38,4 @@ const DoctorSection = () => {
     );
 };
 
-export default DoctorSection;
+export default memo(DoctorSection);

@@ -1,9 +1,10 @@
 import Icon from "@/components/ui/icons/Icon";
-import {tabs} from "@/constants/data";
-import {colors, components} from "@/constants/theme";
-import {Tabs, usePathname, useRouter} from "expo-router";
-import type {Href} from "expo-router";
-import React, {useEffect, useRef} from "react";
+import { tabs } from "@/constants/data";
+import { components } from "@/constants/theme";
+import { useThemeStore } from "@/store/theme.store";
+import type { Href } from "expo-router";
+import { Tabs, usePathname, useRouter } from "expo-router";
+import React, { useEffect, useRef } from "react";
 import {
     Animated,
     LayoutChangeEvent,
@@ -11,8 +12,7 @@ import {
     TouchableOpacity,
     View,
 } from "react-native";
-import {useSafeAreaInsets} from "react-native-safe-area-context";
-import { useThemeStore } from "@/store/theme.store";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // Tab Bar configuration
 const tabBar = components.tabBar;
@@ -22,7 +22,7 @@ const ACTIVE_SIZE = 65;
 const CustomTabBar = () => {
     // Safe Area
     const insets = useSafeAreaInsets();
-    const {isDark} = useThemeStore();
+    const { isDark } = useThemeStore();
 
     const router = useRouter();
     const pathname = usePathname();
@@ -79,11 +79,10 @@ const CustomTabBar = () => {
     return (
         <View
             onLayout={handleLayout}
-            className={`absolute overflow-hidden rounded-3xl ${
-                isDark
-                    ? "bg-[#1e293b] border-slate-700/60"
-                    : "bg-white border-black/10"
-            } border shadow-xl`}
+            className={`absolute overflow-hidden rounded-3xl ${isDark
+                ? "bg-[#1e293b] border-slate-700/60"
+                : "bg-white border-black/10"
+                } border shadow-xl`}
             style={{
                 left: tabBar.horizontalInset,
                 right: tabBar.horizontalInset,
@@ -120,14 +119,14 @@ const CustomTabBar = () => {
                     const iconColor = isActive
                         ? "#ffffff"
                         : isDark
-                          ? "rgba(255, 255, 255, 0.7)"
-                          : "#334155";
+                            ? "rgba(255, 255, 255, 0.7)"
+                            : "#334155";
 
                     const textStyle = isActive
                         ? "text-white font-sans-bold"
                         : isDark
-                          ? "text-slate-400 font-sans-medium"
-                          : "text-slate-700 font-sans-medium";
+                            ? "text-slate-400 font-sans-medium"
+                            : "text-slate-700 font-sans-medium";
 
                     return (
                         <TouchableOpacity

@@ -31,49 +31,6 @@ export const getDoctorSchedule = async (
     return data;
 };
 
-/* ==========================================
-    Create
-========================================== */
-export const createDoctorSchedule = async (
-    values: CreateDoctorSchedule,
-) => {
-    const {data} = await api.post("/doctor-schedule", values);
-    
-    return data;
-};
-
-/* ==========================================
-    Update
-========================================== */
-export const updateDoctorSchedule = async ({
-    id,
-    values,
-}: {
-    id: number;
-    values: UpdateDoctorSchedule;
-}) => {
-    const {data} = await api.put(`/doctor-schedule/${id}`, values);
-
-    return data;
-};
-
-/* ==========================================
-    Delete
-========================================== */
-export const deleteDoctorSchedule = async (id: number) => {
-    const {data} = await api.delete(`/doctor-schedule/${id}`);
-
-    return data;
-};
-
-/* ==========================================
-    Change Status
-========================================== */
-export const changeDoctorScheduleStatus = async (id: number) => {
-    const {data} = await api.patch(`/doctor-schedule/status/${id}`);
-
-    return data;
-};
 
 /* ==========================================
     Get Schedules By Doctor ID

@@ -3,6 +3,7 @@ import {ActivityIndicator, Text, View} from "react-native";
 
 import images from "@/constants/images";
 import CardDoctors, {DoctorData} from "./CardDoctors";
+import { useThemeStore } from "@/store/theme.store";
 
 
 
@@ -89,6 +90,7 @@ export const groupDoctors = (data: any[]) => {
 };
 
 const ShowDoctors: React.FC<ShowDoctorsProps> = ({data, isLoading, limit}) => {
+    const { isDark } = useThemeStore();
     /*
      * Loading
      */
@@ -120,13 +122,13 @@ const ShowDoctors: React.FC<ShowDoctorsProps> = ({data, isLoading, limit}) => {
      */
     if (list.length === 0) {
         return (
-            <View className="mt-4 items-center justify-center rounded-3xl border border-border bg-card px-6 py-8">
-
-                <Text className="mt-3 text-lg font-sans-bold text-primary">
+            <View
+                className={`mt-4 items-center justify-center rounded-3xl border ${isDark ? "border-white/50 bg-slate-800 " : "border-border bg-card"} px-6 py-8`}>
+                <Text className={`mt-3 text-lg font-sans-bold text-primary ${isDark ? "text-white" : "text-black"}`}>
                     لا يوجد أطباء
                 </Text>
 
-                <Text className="mt-1 text-center text-sm font-sans-medium text-muted-foreground">
+                <Text className={`mt-1 text-center text-sm font-sans-medium ${isDark ? "text-gray-300" : "text-muted-foreground"}`}>
                     لا يوجد أطباء متاحون حاليًا
                 </Text>
             </View>
