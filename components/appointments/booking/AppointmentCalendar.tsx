@@ -128,7 +128,7 @@ const AppointmentCalendar: React.FC<AppointmentCalendarProps> = ({
             const today = new Date();
             today.setHours(0, 0, 0, 0);
             // يجب أن يكون تاريخ مستقبلي (بعد اليوم) ونفس يوم الدوام
-            return date > today && date.getDay() === allowedDayNum;
+            return date >= today && date.getDay() === allowedDayNum;
         },
         [allowedDayNum, calendarMonth],
     );

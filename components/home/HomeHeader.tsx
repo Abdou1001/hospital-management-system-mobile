@@ -1,15 +1,20 @@
 import { icons } from "@/constants/icons";
 import { useAuth } from "@/hooks/auth/useAuth";
 import { useThemeStore } from "@/store/theme.store";
+import { useNotificationStore } from "@/store/notification.store";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Image, Pressable, Text, View } from "react-native";
 import Icon from "../ui/icons/Icon";
 
+import { Ionicons } from "@expo/vector-icons";
+
 const HomeHeader = () => {
     const { isDark, toggleTheme } = useThemeStore();
-    const { isAuthenticated } = useAuth();
+    const { isAuthenticated, isLoading, role } = useAuth();
     const router = useRouter();
+    const unreadCount = useNotificationStore((state) => state.getUnreadCount());
+    const isReception = role === "reception" || role === "admin";
 
     return (
         <View className="home-header">
@@ -25,16 +30,31 @@ const HomeHeader = () => {
                     />
                 </Pressable>
                 <Pressable
-                    onPress={() => console.log("notification pressed")}
-                    className="header-buttons p-2 rounded-full active:opacity-60">
+                    onPress={() => router.push("/notifications" as any)}
+                    className="header-buttons p-2 rounded-full active:opacity-60 relative">
                     <Icon
                         icon={icons.bell}
                         size={22}
                         className="home-icons"
                         color={isDark ? "#ffffff" : "#081126"}
                     />
+                    {unreadCount > 0 && (
+                        <View className="absolute top-1.5 right-1.5 size-2.5 rounded-full bg-emerald-500 border border-background dark:border-slate-900" />
+                    )}
                 </Pressable>
-                {!isAuthenticated && (
+                {isReception && (
+                    <Pressable
+                        onPress={() => router.push("/(reception)/pending" as any)}
+                        className="header-buttons p-2 rounded-full active:opacity-60 relative"
+                        accessibilityLabel="لوحة الاستقبال">
+                        <Ionicons
+                            name="desktop-outline"
+                            size={20}
+                            color={isDark ? "#34d399" : "#10b981"}
+                        />
+                    </Pressable>
+                )}
+                {!isAuthenticated && !isLoading && (
                     <Pressable
                         onPress={() => router.push("/(auth)/login")}
                         className="header-buttons p-2 rounded-full active:opacity-60">
@@ -63,7 +83,7 @@ const HomeHeader = () => {
                         </Text>
                     </View>
                 </View>
-                {/* الصوره */}
+                {/* الشعار */}
                 <Image source={icons.logo} className="home-avatar" />
             </View>
         </View>

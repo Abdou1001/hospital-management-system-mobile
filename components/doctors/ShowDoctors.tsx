@@ -1,5 +1,6 @@
 import React from "react";
-import {ActivityIndicator, Text, View} from "react-native";
+import {Text, View} from "react-native";
+import DoctorCardSkeleton from "@/components/skeletons/DoctorCardSkeleton";
 
 import images from "@/constants/images";
 import CardDoctors, {DoctorData} from "./CardDoctors";
@@ -95,11 +96,7 @@ const ShowDoctors: React.FC<ShowDoctorsProps> = ({data, isLoading, limit}) => {
      * Loading
      */
     if (isLoading) {
-        return (
-            <View className="items-center justify-center py-10">
-                <ActivityIndicator size="large" color="#16a34a" />
-            </View>
-        );
+        return <DoctorCardSkeleton count={limit || 3} />;
     }
 
     /*

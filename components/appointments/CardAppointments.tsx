@@ -3,12 +3,46 @@ import {useThemeStore} from "@/store/theme.store";
 import {Appointment} from "@/validation/appointments/schemas/appointment.schema";
 import {Ionicons} from "@expo/vector-icons";
 import React, {useState} from "react";
-import {Image, ImageSourcePropType, Pressable, Text, View} from "react-native";
+import {
+    ActivityIndicator,
+    Image,
+    ImageSourcePropType,
+    Modal,
+    Pressable,
+    Text,
+    View,
+} from "react-native";
 import PaymentReceiptModal from "./PaymentReceiptModal";
+import EditAppointmentModal from "./EditAppointmentModal";
+import {useDoctorSchedule} from "@/hooks/doctorSchedules/useDoctorSchedule";
+import {useCancelAppointment} from "@/hooks/appointments/useCancelAppointment";
+
+function getDayNameFromDate(dateString?: string): string {
+    if (!dateString) return "";
+    try {
+        const [year, month, day] = dateString.split("-").map(Number);
+        if (!year || !month || !day) return "";
+        const date = new Date(year, month - 1, day);
+        const dayNames = [
+            "الأحد",
+            "الإثنين",
+            "الثلاثاء",
+            "الأربعاء",
+            "الخميس",
+            "الجمعة",
+            "السبت",
+        ];
+        return dayNames[date.getDay()] || "";
+    } catch {
+        return "";
+    }
+}
 
 export interface CardAppointmentsProps {
     appointment: Appointment;
     className?: string;
+    actionArea?: React.ReactNode;
+    onPress?: () => void;
 }
 
 const getDoctorImage = (appointment: Appointment): ImageSourcePropType => {
@@ -30,9 +64,68 @@ const getDoctorImage = (appointment: Appointment): ImageSourcePropType => {
 const CardAppointments: React.FC<CardAppointmentsProps> = ({
     appointment,
     className = "",
+    actionArea,
+    onPress,
 }) => {
     const {isDark} = useThemeStore();
     const [isReceiptOpen, setIsReceiptOpen] = useState(false);
+    const [isEditOpen, setIsEditOpen] = useState(false);
+    const [showCancelConfirm, setShowCancelConfirm] = useState(false);
+
+    const cancelMutation = useCancelAppointment();
+
+    const doctorId =
+        appointment.doctor_schedule?.doctor_id ||
+        appointment.doctor_id ||
+        0;
+
+    const directSchedule = appointment.doctor_schedule;
+    const hasDirectSchedule = !!(
+        directSchedule?.day_of_week || directSchedule?.shift_type
+    );
+
+    const { data: scheduleQueryData } = useDoctorSchedule(
+        !hasDirectSchedule && !!doctorId ? doctorId : 0
+    );
+
+    const schedulesList: any[] = Array.isArray(scheduleQueryData?.results)
+        ? scheduleQueryData.results
+        : scheduleQueryData?.results
+        ? [scheduleQueryData.results]
+        : [];
+
+    const targetScheduleId =
+        appointment.schedule_id || appointment.doctor_schedule?.schedule_id;
+
+    const activeSchedule = hasDirectSchedule
+        ? directSchedule
+        : schedulesList.find((s) => s.schedule_id === targetScheduleId) ||
+          directSchedule ||
+          null;
+
+    const dayOfWeek =
+        activeSchedule?.day_of_week ||
+        getDayNameFromDate(appointment.appointment_date);
+
+    const shiftType = activeSchedule?.shift_type;
+
+    const scheduleTitle =
+        dayOfWeek && shiftType
+            ? `${dayOfWeek} - ${shiftType}`
+            : dayOfWeek || shiftType || "";
+
+    const scheduleTime =
+        activeSchedule?.start_time && activeSchedule?.end_time
+            ? `${activeSchedule.start_time.slice(0, 5)} - ${activeSchedule.end_time.slice(0, 5)}`
+            : "";
+
+    const handleConfirmCancel = () => {
+        cancelMutation.mutate(appointment.appointment_id, {
+            onSuccess: () => {
+                setShowCancelConfirm(false);
+            },
+        });
+    };
 
     const getStatusBadge = (status: string) => {
         switch (status) {
@@ -94,8 +187,12 @@ const CardAppointments: React.FC<CardAppointmentsProps> = ({
 
     return (
         <>
-            <View
-                className={`w-full overflow-hidden rounded-3xl border p-4 shadow-sm mb-4 ${
+            <Pressable
+                onPress={onPress}
+                disabled={!onPress}
+                className={`w-full overflow-hidden rounded-3xl border p-4 shadow-sm mb-4 transition-all ${
+                    onPress ? "active:scale-[0.99]" : ""
+                } ${
                     isDark
                         ? "border-slate-700/60 bg-slate-800"
                         : "border-slate-100 bg-white"
@@ -148,18 +245,37 @@ const CardAppointments: React.FC<CardAppointmentsProps> = ({
                             {doctorName}
                         </Text>
 
+                        {/* شارة فترة الدوام والشفت */}
+                        {scheduleTitle ? (
+                            <View className="mt-1 flex-row-reverse items-center gap-1.5 flex-wrap">
+                                <View className="flex-row-reverse items-center gap-1 rounded-md bg-main/10 dark:bg-emerald-950/40 px-2 py-0.5 border border-emerald-500/20">
+                                    <Ionicons
+                                        name="time-outline"
+                                        size={12}
+                                        color="#10b981"
+                                    />
+                                    <Text className="font-sans-bold text-[11px] text-main dark:text-emerald-400">
+                                        {scheduleTitle}
+                                    </Text>
+                                    {scheduleTime ? (
+                                        <Text className="font-sans-medium text-[10px] text-emerald-700/80 dark:text-emerald-300/80">
+                                            ({scheduleTime})
+                                        </Text>
+                                    ) : null}
+                                </View>
+                            </View>
+                        ) : null}
+
                         {/* تاريخ الموعد */}
-                        <View className="mt-1.5 flex-row-reverse items-center gap-1.5">
+                        <View className="mt-1 flex-row-reverse items-center gap-1.5">
                             <Ionicons
                                 name="calendar-outline"
-                                size={14}
-                                color="#10b981"
+                                size={13}
+                                color={isDark ? "#94a3b8" : "#64748b"}
                             />
                             <Text
-                                className={`font-sans-bold text-sm ${
-                                    isDark
-                                        ? "text-emerald-400"
-                                        : "text-emerald-600"
+                                className={`font-sans-medium text-xs ${
+                                    isDark ? "text-slate-300" : "text-slate-600"
                                 }`}>
                                 موعد الحجز: {appointment.appointment_date}
                             </Text>
@@ -272,7 +388,50 @@ const CardAppointments: React.FC<CardAppointmentsProps> = ({
                         </Pressable>
                     </View>
                 ) : null}
-            </View>
+
+                {/* أزرار الإجراءات الخاصة بالحجز المعلق للمستخدم (تعديل وإلغاء) */}
+                {appointment.status === "pending" && !actionArea ? (
+                    <View className="mt-3 pt-3 border-t border-border dark:border-slate-700/60 flex-row-reverse items-center gap-2.5">
+                        <Pressable
+                            onPress={() => setIsEditOpen(true)}
+                            className={`flex-1 flex-row-reverse items-center justify-center gap-1.5 rounded-2xl border py-2.5 ${
+                                isDark
+                                    ? "border-blue-500/40 bg-blue-950/30 active:bg-blue-900/40"
+                                    : "border-blue-300 bg-blue-50/80 active:bg-blue-100"
+                            }`}>
+                            <Ionicons
+                                name="create-outline"
+                                size={15}
+                                color="#3b82f6"
+                            />
+                            <Text className="font-sans-bold text-xs text-blue-600 dark:text-blue-400">
+                                تعديل الحجز
+                            </Text>
+                        </Pressable>
+
+                        <Pressable
+                            onPress={() => setShowCancelConfirm(true)}
+                            disabled={cancelMutation.isPending}
+                            className={`flex-1 flex-row-reverse items-center justify-center gap-1.5 rounded-2xl border py-2.5 ${
+                                isDark
+                                    ? "border-red-500/40 bg-red-950/30 active:bg-red-900/40"
+                                    : "border-red-200 bg-red-50/80 active:bg-red-100"
+                            }`}>
+                            <Ionicons
+                                name="close-circle-outline"
+                                size={15}
+                                color="#ef4444"
+                            />
+                            <Text className="font-sans-bold text-xs text-red-600 dark:text-red-400">
+                                إلغاء الحجز
+                            </Text>
+                        </Pressable>
+                    </View>
+                ) : null}
+
+                {/* أزرار الإجراءات الخاصة بـ Reception أو مخصصة */}
+                {actionArea ? <View className="mt-3">{actionArea}</View> : null}
+            </Pressable>
 
             {/* نافذة عرض سند الدفع (Receipt Modal) */}
             {appointment.payment_receipt ? (
@@ -282,8 +441,87 @@ const CardAppointments: React.FC<CardAppointmentsProps> = ({
                     setIsReceiptOpen={setIsReceiptOpen}
                 />
             ) : null}
+
+            {/* نافذة تعديل الحجز للمستخدم */}
+            <EditAppointmentModal
+                visible={isEditOpen}
+                onClose={() => setIsEditOpen(false)}
+                appointment={appointment}
+            />
+
+            {/* مودال تأكيد إلغاء الحجز */}
+            <Modal
+                visible={showCancelConfirm}
+                transparent
+                animationType="fade"
+                onRequestClose={() => setShowCancelConfirm(false)}>
+                <View className="flex-1 items-center justify-center bg-black/60 px-5">
+                    <View
+                        className={`w-full max-w-sm rounded-3xl p-5 border ${
+                            isDark
+                                ? "border-slate-700 bg-slate-900"
+                                : "border-slate-100 bg-white"
+                        }`}>
+                        <View className="size-12 rounded-full bg-red-500/10 items-center justify-center self-center mb-3">
+                            <Ionicons
+                                name="warning-outline"
+                                size={24}
+                                color="#ef4444"
+                            />
+                        </View>
+                        <Text
+                            className={`text-center font-sans-bold text-base ${
+                                isDark ? "text-white" : "text-slate-900"
+                            }`}>
+                            تأكيد إلغاء الحجز
+                        </Text>
+                        <Text className="mt-2 text-center font-sans-medium text-xs text-muted-foreground dark:text-slate-400 leading-6">
+                            هل أنت متأكد من رغبتك في إلغاء هذا الحجز؟ لا يمكنك
+                            التراجع عن الإلغاء بعد تأكيده.
+                            {"\n"}في حالة إلغاء الحجز، يمكنك .إعادة التسجيل أو
+                            إحضار السند لاسترجاع المبلغ (حافظ على السند)
+                        </Text>
+
+                        <View className="mt-5 flex-row-reverse items-center gap-3">
+                            <Pressable
+                                onPress={handleConfirmCancel}
+                                disabled={cancelMutation.isPending}
+                                className="flex-1 flex-row items-center justify-center gap-1.5 rounded-2xl bg-red-500 py-3 active:opacity-80">
+                                {cancelMutation.isPending ? (
+                                    <ActivityIndicator
+                                        size="small"
+                                        color="#ffffff"
+                                    />
+                                ) : (
+                                    <Text className="font-sans-bold text-xs text-white">
+                                        نعم، إلغاء الحجز
+                                    </Text>
+                                )}
+                            </Pressable>
+                            <Pressable
+                                onPress={() => setShowCancelConfirm(false)}
+                                disabled={cancelMutation.isPending}
+                                className={`flex-1 items-center justify-center rounded-2xl border py-3 ${
+                                    isDark
+                                        ? "border-slate-700 bg-slate-800"
+                                        : "border-slate-200 bg-slate-100"
+                                }`}>
+                                <Text
+                                    className={`font-sans-bold text-xs ${
+                                        isDark
+                                            ? "text-slate-300"
+                                            : "text-slate-700"
+                                    }`}>
+                                    تراجع
+                                </Text>
+                            </Pressable>
+                        </View>
+                    </View>
+                </View>
+            </Modal>
         </>
     );
 };
 
 export default CardAppointments;
+

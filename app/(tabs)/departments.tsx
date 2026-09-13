@@ -2,6 +2,7 @@ import CardDepartment from "@/components/departments/CardDepartment";
 import {getDepartmentImageSource} from "@/components/departments/ShowDepartments";
 import SectionTitle from "@/components/shared/SectionTitle";
 import UpperSection from "@/components/shared/UpperSection";
+import DepartmentCardSkeleton from "@/components/skeletons/DepartmentCardSkeleton";
 import {icons} from "@/constants/icons";
 import {useDepartments} from "@/hooks/departments/useDepartments";
 import {useDebounce} from "@/hooks/shared/useDebounce";
@@ -103,12 +104,8 @@ const Departments = () => {
                 }
                 ListEmptyComponent={
                     isLoading ? (
-                        <View className="py-20 items-center justify-center">
-                            <ActivityIndicator size="large" color="#16a34a" />
-                            <Text
-                                className={`mt-3 font-sans-medium text-xs ${isDark ? "text-slate-400" : "text-muted-foreground"}`}>
-                                جارٍ تحميل الأقسام...
-                            </Text>
+                        <View className="py-2">
+                            <DepartmentCardSkeleton count={12} />
                         </View>
                     ) : isError ? (
                         <View className="py-16 items-center justify-center rounded-3xl border border-red-500/20 bg-red-50/10 p-6">

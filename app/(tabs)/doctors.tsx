@@ -1,4 +1,5 @@
 import CardDoctors from "@/components/doctors/CardDoctors";
+import DoctorCardSkeleton from "@/components/skeletons/DoctorCardSkeleton";
 import { groupDoctors } from "@/components/doctors/ShowDoctors";
 import SectionTitle from "@/components/shared/SectionTitle";
 import UpperSection from "@/components/shared/UpperSection";
@@ -108,12 +109,7 @@ const Doctors = () => {
                 }
                 ListEmptyComponent={
                     isLoading ? (
-                        <View className="py-20 items-center justify-center">
-                            <ActivityIndicator size="large" color="#16a34a" />
-                            <Text className="mt-3 font-sans-medium text-xs text-muted-foreground dark:text-slate-400">
-                                جارٍ تحميل قائمة الأطباء...
-                            </Text>
-                        </View>
+                        <DoctorCardSkeleton count={4} />
                     ) : isError ? (
                         <View className="py-16 items-center justify-center rounded-3xl border border-red-500/20 bg-red-50/10 p-6">
                             <Ionicons

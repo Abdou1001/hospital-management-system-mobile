@@ -13,7 +13,7 @@ import Animated, {
     useSharedValue,
 } from "react-native-reanimated";
 
-import {getAdImageSource} from "./HomeAds";
+import {getAdImageSource} from "@/utils/adImage";
 
 const AnimatedImage = Animated.createAnimatedComponent(Image);
 

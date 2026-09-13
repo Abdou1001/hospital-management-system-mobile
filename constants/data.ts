@@ -10,10 +10,4 @@ export const tabs: AppTab[] = [
 ];
 
 
-export const DoctorsData: DoctorsItem[] = [
-    {id: "1", name: "علي سعيد باسيعد", bio: "قام بعمليات كثيرة" , image: images.maleDoctor},
-    {id: "2", name: "عبدالرحمن احمد محمد يسلم بن سعد",bio: "قام بعمليات كثيرة", image: images.maleDoctor},
-    {id: "3", name: "عمر محمد سبيدان العوبثاني",bio: "قام بعمليات كثيرة", image: images.maleDoctor},
-    {id: "4", name: "محمد بكري باسودان",bio: "قام بعمليات كثيرة", image: images.maleDoctor},
-];
 

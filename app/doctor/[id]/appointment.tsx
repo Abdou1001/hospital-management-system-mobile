@@ -1,8 +1,9 @@
+import BookingPageSkeleton from "@/components/skeletons/BookingPageSkeleton";
 import {Ionicons} from "@expo/vector-icons";
 import {zodResolver} from "@hookform/resolvers/zod";
 import {useLocalSearchParams, useRouter} from "expo-router";
 import {styled} from "nativewind";
-import React, {useCallback, useMemo, useState} from "react";
+import {useCallback, useMemo, useState} from "react";
 import {useForm} from "react-hook-form";
 import {
     ActivityIndicator,
@@ -88,8 +89,6 @@ const AppointmentBookingScreen = () => {
             payment_receipt: null,
         },
     });
-
-    console.log("rernder");
 
     const [showSuccessModal, setShowSuccessModal] = useState(false);
 
@@ -180,26 +179,25 @@ const AppointmentBookingScreen = () => {
     // حالة التحميل
     // ============================
     if (isDoctorLoading || isLoading) {
-        return (
-            <View className="flex-1 items-center justify-center bg-background dark:bg-slate-900">
-                <ActivityIndicator size="large" color="#10b981" />
-            </View>
-        );
+        return <BookingPageSkeleton />;
     }
 
     if (!doctor) {
         return (
             <SafeAreaView className="flex-1 bg-background p-5 dark:bg-slate-900">
+                {/* Left Side: Back Arrow Button */}
                 <Pressable
                     onPress={() => router.back()}
-                    className={`mb-4 size-10 items-center justify-center rounded-full ${
-                        isDark ? "bg-slate-800" : "bg-slate-100"
+                    hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
+                    className={`size-11 items-center justify-center rounded-2xl border ${
+                        isDark
+                            ? "border-slate-800 bg-slate-800/80 active:bg-slate-700"
+                            : "border-slate-200/80 bg-white/80 shadow-xs active:bg-slate-100"
                     }`}>
-                    <Image
-                        source={icons.back}
-                        className="size-5"
-                        resizeMode="contain"
-                        style={{tintColor: isDark ? "#ffffff" : "#1e293b"}}
+                    <Ionicons
+                        name="chevron-back"
+                        size={22}
+                        color={isDark ? "#ffffff" : "#081126"}
                     />
                 </Pressable>
                 <View className="flex-1 items-center justify-center">
@@ -275,18 +273,19 @@ const AppointmentBookingScreen = () => {
                             الهيدر
                         ============================ */}
                     <View className="mb-4 flex-row items-center justify-between">
+                        {/* Left Side: Back Arrow Button */}
                         <Pressable
                             onPress={() => router.back()}
-                            className={`size-10 items-center justify-center rounded-full ${
-                                isDark ? "bg-slate-800" : "bg-slate-100"
+                            hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
+                            className={`size-11 items-center justify-center rounded-2xl border ${
+                                isDark
+                                    ? "border-slate-800 bg-slate-800/80 active:bg-slate-700"
+                                    : "border-slate-200/80 bg-white/80 shadow-xs active:bg-slate-100"
                             }`}>
-                            <Image
-                                source={icons.back}
-                                className="size-5"
-                                resizeMode="contain"
-                                style={{
-                                    tintColor: isDark ? "#ffffff" : "#1e293b",
-                                }}
+                            <Ionicons
+                                name="chevron-back"
+                                size={22}
+                                color={isDark ? "#ffffff" : "#081126"}
                             />
                         </Pressable>
                         <Text
@@ -393,13 +392,13 @@ const AppointmentBookingScreen = () => {
                                         تنبيه مهم
                                     </Text>
                                     <Text
-                                        className="mt-1 font-sans-medium text-xs leading-5 text-amber-600 dark:text-amber-300"
+                                        className="mt-1 font-sans-medium text-xs text-amber-600 dark:text-amber-300 leading-6"
                                         style={{textAlign: "right"}}>
                                         • حافظ على سند الدفع وأحضره معك عند
-                                        مراجعة الطبيب{"\n"}
-                                        • اذا كان موعدك ساخداكثر من يومين سيتم مراجعة طلبك قبل الموعد بيوم و سيتم ارسال لك اشعار
-                                        {"\n"}
-                                        وأحضره معك عند • في حالة إلغاء الحجز أو
+                                        مراجعة الطبيب{"\n"}• اذا كان موعدك
+                                        ساخداكثر من يومين سيتم مراجعة طلبك قبل
+                                        الموعد بيوم و سيتم ارسال لك اشعار وأحضره
+                                        معك عند {"\n"}• في حالة إلغاء الحجز أو
                                         عدم الحضور، يمكنك إعادة التسجيل أو إحضار
                                         السند لاسترجاع المبلغ
                                     </Text>

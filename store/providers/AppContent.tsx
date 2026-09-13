@@ -6,6 +6,7 @@ import { toastConfig } from "@/components/ui/ToastConfig";
 import { useCurrentUser } from "@/hooks/auth/useCurrentUser";
 import { useAuthStore } from "@/store/auth.store";
 import { useThemeStore } from "../theme.store";
+import { registerForPushNotificationsAsync } from "@/services/notifications/registerForPushNotifications";
 
 const AppContent = () => {
     const { data: user, isLoading, isError } = useCurrentUser();
@@ -18,6 +19,7 @@ const AppContent = () => {
     useEffect(() => {
         if (user) {
             setUser(user);
+            registerForPushNotificationsAsync();
         }
 
         if (isError) {

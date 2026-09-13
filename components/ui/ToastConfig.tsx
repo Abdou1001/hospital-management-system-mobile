@@ -125,7 +125,7 @@ export const CustomToast = ({
                     ) : null}
                     {text2 ? (
                         <Text
-                            className={`font-sans-medium text-xs leading-4 mt-0.5 ${
+                            className={`font-sans-medium text-xs leading-8 mt-0.5 ${
                                 isDark ? "text-slate-400" : "text-slate-500"
                             }`}
                             style={{ textAlign: "right" }}>

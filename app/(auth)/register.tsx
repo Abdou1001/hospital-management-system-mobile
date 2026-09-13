@@ -87,7 +87,6 @@ const RegisterScreen = () => {
             phone_number: payload.phone_number,
         };
 
-        console.log("Sending Register Payload:", requestData);
 
         registerMutate(requestData, {
             onSuccess: () => {

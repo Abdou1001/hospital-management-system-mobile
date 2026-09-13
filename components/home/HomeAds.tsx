@@ -3,7 +3,6 @@ import { useAds } from "@/hooks/ads/useAds";
 import { useThemeStore } from "@/store/theme.store";
 import React, { useEffect, useRef, useState } from "react";
 import {
-    ActivityIndicator,
     FlatList,
     Image,
     NativeScrollEvent,
@@ -11,7 +10,10 @@ import {
     Pressable,
     View,
 } from "react-native";
+import HomeAdsSkeleton from "@/components/skeletons/HomeAdsSkeleton";
 import AdImageModal from "./AdImageModal";
+import { getAdImageSource } from "@/utils/adImage";
+export { getAdImageSource };
 
 const CARD_HEIGHT = 300;
 
@@ -22,23 +24,6 @@ const fallbackAds = [
     { id: "3", image: images.ad_3 },
     { id: "4", image: images.ad_2 },
 ];
-
-export const getAdImageSource = (item: any) => {
-    if (item.image && typeof item.image !== "string") {
-        return item.image;
-    }
-    const path = item.image_url || item.path_image || item.image || item.url;
-    if (typeof path === "string" && path.trim().length > 0) {
-        if (path.startsWith("http://") || path.startsWith("https://")) {
-            return { uri: path };
-        }
-        const baseUrl = process.env.EXPO_PUBLIC_STORAGE_URL || process.env.EXPO_PUBLIC_API_URL || "";
-        const cleanBase = baseUrl.replace(/\/api\/?$/, "").replace(/\/$/, "");
-        const cleanPath = path.startsWith("/") ? path : `/${path}`;
-        return { uri: `${cleanBase}${cleanPath}` };
-    }
-    return images.ad_1;
-};
 
 const HomeAds = () => {
     const { isDark } = useThemeStore();
@@ -103,18 +88,11 @@ const HomeAds = () => {
      * الضغط على الإعلان
      */
     const handlePress = (item: any) => {
-        console.log("Clicked ad:", item);
         setSelectedAd(item);
     };
 
     if (isLoading && containerWidth > 0) {
-        return (
-            <View
-                className="mt-3 justify-center items-center rounded-3xl bg-slate-100 dark:bg-slate-800/50"
-                style={{ height: CARD_HEIGHT }}>
-                <ActivityIndicator size="large" color={"#16a34a"} />
-            </View>
-        );
+        return <HomeAdsSkeleton height={CARD_HEIGHT} width={containerWidth} />;
     }
 
     return (

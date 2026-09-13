@@ -14,6 +14,7 @@ import {
     View,
 } from "react-native";
 import CardAppointments from "./CardAppointments";
+import AppointmentCardSkeleton from "@/components/skeletons/AppointmentCardSkeleton";
 
 type FilterStatus = "all" | "approved" | "pending" | "cancelled" | "rejected";
 
@@ -134,11 +135,8 @@ const ShowAppointments: React.FC<ShowAppointmentsProps> = ({ keyword }) => {
                 }
                 ListEmptyComponent={
                     isLoading ? (
-                        <View className="py-20 items-center justify-center">
-                            <ActivityIndicator size="large" color="#10b981" />
-                            <Text className="mt-3 font-sans-medium text-xs text-muted-foreground dark:text-slate-400">
-                                جارٍ تحميل حجوزاتك ومواعيدك...
-                            </Text>
+                        <View className="py-4">
+                            <AppointmentCardSkeleton count={4} />
                         </View>
                     ) : isError ? (
                         <View className="py-16 items-center justify-center rounded-3xl border border-red-500/20 bg-red-50/10 p-6">

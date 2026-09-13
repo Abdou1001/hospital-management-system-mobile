@@ -1,6 +1,8 @@
+import "react-native-gesture-handler";
 import "@/global.css";
 import {SplashScreen, Stack} from "expo-router";
 import React, {useEffect} from "react";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 // font
 import {
     Cairo_400Regular,
@@ -14,6 +16,7 @@ import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { useCurrentUser } from "@/hooks/auth/useCurrentUser";
 import AppContent from "@/store/providers/AppContent";
+import { registerForPushNotificationsAsync } from "@/services/notifications/registerForPushNotifications";
 
 export default function App() {
     const [fontsLoaded] = useFonts({
@@ -30,20 +33,25 @@ export default function App() {
         }
     }, [fontsLoaded]);
 
+    useEffect(() => {
+        registerForPushNotificationsAsync();
+    }, []);
+    
     if (!fontsLoaded) {
         return null;
     }
 
     const queryClient = new QueryClient();
 
-    
 
     return (
-        <QueryClientProvider client={queryClient}>
-            <ThemeProvider>
-                <AppContent />
-            </ThemeProvider>
-        </QueryClientProvider>
+        <GestureHandlerRootView style={{ flex: 1 }}>
+            <QueryClientProvider client={queryClient}>
+                <ThemeProvider>
+                    <AppContent />
+                </ThemeProvider>
+            </QueryClientProvider>
+        </GestureHandlerRootView>
     );
 }
 

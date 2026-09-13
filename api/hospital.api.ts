@@ -7,13 +7,3 @@ export const getHospital = async () => {
     const { results }: { results: HospitalSchema } = data;
     return results;
 };
-
-// editHospital
-export const editHospital = async (formData: FormData) => {
-    const { data } = await api.put("/hospital", formData, {
-        headers: {
-            "Content-Type": "multipart/form-data",
-        },
-    });
-    return data;
-};

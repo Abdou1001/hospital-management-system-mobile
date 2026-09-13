@@ -3,7 +3,8 @@ import {BookingAppointmentFormValues} from "@/validation/appointments/schemas/bo
 import {Ionicons} from "@expo/vector-icons";
 import React, {memo, useState} from "react";
 import {Control, useWatch} from "react-hook-form";
-import {ActivityIndicator, Pressable, Text, View} from "react-native";
+import {Pressable, Text, View} from "react-native";
+import SkeletonWrapper from "@/components/skeletons/SkeletonWrapper";
 
 interface SchedulePickerProps {
     schedules: DoctorScheduleItem[];
@@ -43,14 +44,16 @@ const SchedulePicker: React.FC<SchedulePickerProps> = ({
             </Text>
 
             {isLoading ? (
-                <View
-                    className={`h-14 w-full items-center justify-center rounded-2xl border ${
-                        isDark
-                            ? "border-slate-700 bg-slate-900/60"
-                            : "border-slate-200 bg-slate-50"
-                    }`}>
-                    <ActivityIndicator size="small" color="#10b981" />
-                </View>
+                <SkeletonWrapper>
+                    <View
+                        style={{
+                            height: 56,
+                            width: "100%",
+                            borderRadius: 16,
+                            backgroundColor: "#000",
+                        }}
+                    />
+                </SkeletonWrapper>
             ) : (
                 <>
                     <Pressable

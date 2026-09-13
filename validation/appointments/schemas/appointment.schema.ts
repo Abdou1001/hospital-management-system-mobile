@@ -21,6 +21,13 @@ export const appointmentDoctorScheduleSchema = z.object({
     doctor: appointmentDoctorSchema.nullable().optional(),
     doctor_id: z.number().nullable().optional(),
     schedule_id: z.number().nullable().optional(),
+    day_of_week: z.string().nullable().optional(),
+    shift_type: z.string().nullable().optional(),
+    start_time: z.string().nullable().optional(),
+    end_time: z.string().nullable().optional(),
+    max_patients: z.number().nullable().optional(),
+    notes: z.string().nullable().optional(),
+    status: z.string().nullable().optional(),
 });
 
 // =========================

@@ -4,11 +4,12 @@ import GuestLoginCard from "@/components/settings/GuestLoginCard";
 import HospitalInfoCard from "@/components/settings/HospitalInfoCard";
 import LogoutButton from "@/components/settings/LogoutButton";
 import UserProfileCard from "@/components/settings/UserProfileCard";
+import UserProfileSkeleton from "@/components/skeletons/UserProfileSkeleton";
 import { icons } from "@/constants/icons";
 import { useAuth } from "@/hooks/auth/useAuth";
 import { styled } from "nativewind";
 import React from "react";
-import { ActivityIndicator, RefreshControl, ScrollView, View } from "react-native";
+import { RefreshControl, ScrollView, View } from "react-native";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 import { useCurrentUser } from "@/hooks/auth/useCurrentUser";
 
@@ -38,9 +39,7 @@ const Settings = () => {
                 {/* 1. معلومات المستخدم أو دعوة تسجيل الدخول */}
                 <View className="mt-4">
                     {isLoading ? (
-                        <View className="w-full h-32 rounded-3xl border border-border dark:border-slate-800 items-center justify-center mb-5">
-                            <ActivityIndicator size="small" color="#10b981" />
-                        </View>
+                        <UserProfileSkeleton />
                     ) : isAuthenticated && user ? (
                         <UserProfileCard user={user} />
                     ) : (

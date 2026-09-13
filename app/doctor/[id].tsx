@@ -1,12 +1,12 @@
 import React from "react";
 import {
-    ActivityIndicator,
     Image,
     Pressable,
     ScrollView,
     Text,
     View,
 } from "react-native";
+import DoctorDetailsSkeleton from "@/components/skeletons/DoctorDetailsSkeleton";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
 import { styled } from "nativewind";
@@ -15,7 +15,7 @@ import { useDoctor } from "@/hooks/doctors/useDoctor";
 import { useThemeStore } from "@/store/theme.store";
 import { getDoctorImageSource } from "@/components/doctors/ShowDoctors";
 import { icons } from "@/constants/icons";
-import Icon from "@/components/ui/icons/Icon";
+import { Ionicons } from "@expo/vector-icons";
 
 const SafeAreaView = styled(RNSafeAreaView);
 
@@ -38,27 +38,26 @@ const DoctorDetailsScreen = () => {
 
     // حالة التحميل
     if (isLoading) {
-        return (
-            <View className="flex-1 items-center justify-center bg-background dark:bg-slate-900">
-                <ActivityIndicator size="large" color="#16a34a" />
-            </View>
-        );
+        return <DoctorDetailsSkeleton />;
     }
 
     // إذا كان الطبيب غير موجود أو مخفي (is_hidden === true) لا يظهر في التطبيق
     if (!doctor || doctor.is_hidden) {
         return (
             <SafeAreaView className="flex-1 bg-background p-5 dark:bg-slate-900">
+                {/* Left Side: Back Arrow Button */}
                 <Pressable
                     onPress={() => router.back()}
-                    className={`mb-4 size-10 items-center justify-center rounded-full ${
-                        isDark ? "bg-slate-800" : "bg-slate-100"
+                    hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
+                    className={`size-11 items-center justify-center rounded-2xl border ${
+                        isDark
+                            ? "border-slate-800 bg-slate-800/80 active:bg-slate-700"
+                            : "border-slate-200/80 bg-white/80 shadow-xs active:bg-slate-100"
                     }`}>
-                    <Icon
-                        icon={icons.back}
-                        size={20}
-                        className="text-muted-foreground dark:text-slate-400 text-2xl size-5"
-                        color={isDark ? "#94a3b8" : "#6b7280"}
+                    <Ionicons
+                        name="chevron-back"
+                        size={22}
+                        color={isDark ? "#ffffff" : "#081126"}
                     />
                 </Pressable>
 
@@ -102,18 +101,19 @@ const DoctorDetailsScreen = () => {
                 <SafeAreaView className="p-5 pb-28">
                     {/* Header bar */}
                     <View className="mb-4 flex-row items-center justify-between">
+                        {/* Left Side: Back Arrow Button */}
                         <Pressable
                             onPress={() => router.back()}
-                            className={`size-10 items-center justify-center rounded-full ${
-                                isDark ? "bg-slate-800" : "bg-slate-100"
+                            hitSlop={{top: 10, bottom: 10, left: 10, right: 10}}
+                            className={`size-11 items-center justify-center rounded-2xl border ${
+                                isDark
+                                    ? "border-slate-800 bg-slate-800/80 active:bg-slate-700"
+                                    : "border-slate-200/80 bg-white/80 shadow-xs active:bg-slate-100"
                             }`}>
-                            <Image
-                                source={icons.back}
-                                className="size-5"
-                                resizeMode="contain"
-                                style={{
-                                    tintColor: isDark ? "#ffffff" : "#1e293b",
-                                }}
+                            <Ionicons
+                                name="chevron-back"
+                                size={22}
+                                color={isDark ? "#ffffff" : "#081126"}
                             />
                         </Pressable>
                         <Text

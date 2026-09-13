@@ -3,7 +3,8 @@ import { toast } from "@/lib/toast";
 import { Ionicons } from "@expo/vector-icons";
 import * as Clipboard from "expo-clipboard";
 import React, { memo } from "react";
-import { ActivityIndicator, Image, Pressable, Text, View } from "react-native";
+import { Image, Pressable, Text, View } from "react-native";
+import SkeletonWrapper from "@/components/skeletons/SkeletonWrapper";
 
 interface BankAccountsSectionProps {
     bankAccounts: BankAccount[];
@@ -36,14 +37,16 @@ const BankAccountsSection: React.FC<BankAccountsSectionProps> = ({
                     style={{ textAlign: "right" }}>
                     الحسابات البنكية للتحويل
                 </Text>
-                <View
-                    className={`items-center justify-center rounded-2xl border p-6 ${
-                        isDark
-                            ? "border-slate-700 bg-slate-900/40"
-                            : "border-slate-200 bg-slate-50"
-                    }`}>
-                    <ActivityIndicator size="small" color="#10b981" />
-                </View>
+                <SkeletonWrapper>
+                    <View
+                        style={{
+                            height: 72,
+                            borderRadius: 16,
+                            width: "100%",
+                            backgroundColor: "#000",
+                        }}
+                    />
+                </SkeletonWrapper>
             </View>
         );
     }

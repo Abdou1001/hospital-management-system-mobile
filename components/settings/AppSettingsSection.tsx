@@ -1,10 +1,12 @@
 import {useThemeStore} from "@/store/theme.store";
 import {Ionicons} from "@expo/vector-icons";
+import {useRouter} from "expo-router";
 import React from "react";
 import {Pressable, Switch, Text, TouchableOpacity, View} from "react-native";
 
 const AppSettingsSection = () => {
     const {isDark, toggleTheme} = useThemeStore();
+    const router = useRouter();
 
     return (
         <View className="mb-6">
@@ -54,7 +56,9 @@ const AppSettingsSection = () => {
                 </View>
 
                 {/* Notifications Row */}
-                <TouchableOpacity className="flex-row-reverse items-center justify-between p-4">
+                <TouchableOpacity
+                    onPress={() => router.push("/notifications" as any)}
+                    className="flex-row-reverse items-center justify-between p-4">
                     <View className="flex-row-reverse items-center gap-3">
                         <View className="size-10 rounded-xl bg-blue-500/10 items-center justify-center">
                             <Ionicons

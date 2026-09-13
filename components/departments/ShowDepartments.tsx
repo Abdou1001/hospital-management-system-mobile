@@ -1,8 +1,9 @@
-import React from "react";
-import {ActivityIndicator, Text, View} from "react-native";
-import CardDepartment from "./CardDepartment";
+import DepartmentCardSkeleton from "@/components/skeletons/DepartmentCardSkeleton";
 import images from "@/constants/images";
-import { useThemeStore } from "@/store/theme.store";
+import {useThemeStore} from "@/store/theme.store";
+import React from "react";
+import {Text, View} from "react-native";
+import CardDepartment from "./CardDepartment";
 
 export const getDepartmentImageSource = (item: any) => {
     if (item.image && typeof item.image !== "string") {
@@ -20,7 +21,7 @@ export const getDepartmentImageSource = (item: any) => {
             process.env.EXPO_PUBLIC_STORAGE_URL ||
             process.env.EXPO_PUBLIC_API_URL ||
             "";
-
+        ;
         const cleanBase = baseUrl.replace(/\/api\/?$/, "").replace(/\/$/, "");
 
         const cleanPath = path.startsWith("/") ? path : `/${path}`;
@@ -38,14 +39,10 @@ const ShowDepartments: React.FC<ShowDepartmentsProps> = ({
     isLoading,
     limit,
 }) => {
-    const { isDark } = useThemeStore();
+    const {isDark} = useThemeStore();
     // Loading
     if (isLoading) {
-        return (
-            <View className="items-center justify-center py-10">
-                <ActivityIndicator size="large" color="#16a34a" />
-            </View>
-        );
+        return <DepartmentCardSkeleton count={limit || 8} />;
     }
 
     /*

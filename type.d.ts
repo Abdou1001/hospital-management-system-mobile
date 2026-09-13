@@ -31,6 +31,13 @@ declare global {
         isLoading?: boolean;
         limit?: number;
     }
+
+    export type NotificationType =
+        | "system"
+        | "ad"
+        | "discovery"
+        | "appointment"
+        | "reminder";
 }
 
 export {};

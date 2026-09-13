@@ -1,8 +1,9 @@
 import { useAuth } from "@/hooks/auth/useAuth";
 import React, { memo } from "react";
-import { ActivityIndicator, Text, View } from "react-native";
+import { View } from "react-native";
 import LoginMessage from "./LoginMessage";
 import ShowAppointments from "./ShowAppointments";
+import AppointmentCardSkeleton from "@/components/skeletons/AppointmentCardSkeleton";
 
 interface AppointmentsSectionProps {
     keyword?: string;
@@ -13,11 +14,8 @@ const AppointmentsSection: React.FC<AppointmentsSectionProps> = ({ keyword }) =>
 
     if (isLoading)
         return (
-            <View className="py-20 items-center justify-center">
-                <ActivityIndicator size="large" color="#10b981" />
-                <Text className="mt-3 font-sans-medium text-xs text-muted-foreground dark:text-slate-400">
-                    جارٍ تحميل حجوزاتك ومواعيدك...
-                </Text>
+            <View className="mt-3">
+                <AppointmentCardSkeleton count={3} />
             </View>
         );
     return (
