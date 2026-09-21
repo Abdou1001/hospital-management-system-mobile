@@ -1,6 +1,8 @@
 import {useThemeStore} from "@/store/theme.store";
 import {Ionicons} from "@expo/vector-icons";
 import React, {useCallback, useEffect, useMemo, useRef, useState} from "react";
+import Toast from "react-native-toast-message";
+import {toastConfig} from "@/components/ui/ToastConfig";
 import {
     Keyboard,
     Modal,
@@ -39,6 +41,7 @@ interface ExpandableModalProps {
     children: React.ReactNode;
     subtitle?: string;
     allowManualExpand?: boolean;
+    overlay?: React.ReactNode;
 }
 
 // Spring configuration with overshootClamping to eliminate unwanted bounce (ارتداد)
@@ -60,6 +63,7 @@ export const ExpandableModal: React.FC<ExpandableModalProps> = ({
     children,
     subtitle,
     allowManualExpand = true,
+    overlay,
 }) => {
     const {isDark} = useThemeStore();
     const insets = useSafeAreaInsets();
@@ -429,6 +433,12 @@ export const ExpandableModal: React.FC<ExpandableModalProps> = ({
                             </ScrollView>
                         </Animated.View>
                     </TouchableWithoutFeedback>
+
+                    {/* Modal Overlay */}
+                    {overlay}
+
+                    {/* Toast above Modal */}
+                    <Toast config={toastConfig} />
                 </View>
             </GestureHandlerRootView>
         </Modal>

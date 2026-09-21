@@ -9,7 +9,7 @@ interface DepartmentCardSkeletonProps {
 
 const SingleDepartmentSkeleton = ({ isDark }: { isDark: boolean }) => (
     <View
-        className={`w-[23%] items-center justify-center py-3.5 px-1 rounded-2xl border ${
+        className={`w-[30%] items-center justify-center py-3.5 px-1 rounded-2xl border ${
             isDark
                 ? "border-slate-700/60 bg-slate-800/40"
                 : "border-slate-100 bg-white"
@@ -37,7 +37,7 @@ const SingleDepartmentSkeleton = ({ isDark }: { isDark: boolean }) => (
 );
 
 export const DepartmentCardSkeleton: React.FC<DepartmentCardSkeletonProps> = ({
-    count = 8,
+    count = 6,
 }) => {
     const { isDark } = useThemeStore();
     const items = Array.from({ length: count });

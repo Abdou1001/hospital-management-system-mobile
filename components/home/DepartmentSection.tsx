@@ -14,7 +14,7 @@ const DepartmentSection = () => {
     return (
         <View>
             <TitleSection title="الأقسام" path={"/(tabs)/departments"} icon={icons.departments} />
-            <ShowDepartments data={apiDepartments} isLoading={isLoading} limit={8} />
+            <ShowDepartments data={apiDepartments} isLoading={isLoading} limit={6} />
         </View>
     );
 };

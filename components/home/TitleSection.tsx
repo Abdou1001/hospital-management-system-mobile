@@ -18,7 +18,7 @@ const TitleSection: React.FC<TitleSectionProps> = ({
 }) => {
     const { isDark } = useThemeStore();
     return (
-        <View className="mt-7 flex-row-reverse justify-between items-center">
+        <View className="mt-5 flex-row-reverse justify-between items-center">
             <View className="flex-row-reverse items-center justify-center gap-2">
                 {icon && (
                     <Icon
@@ -29,7 +29,7 @@ const TitleSection: React.FC<TitleSectionProps> = ({
                     />
                 )}
                 <Text
-                    className={`text-2xl font-sans-bold mt-2 ${isDark ? "text-white" : "text-primary"}`}>
+                    className={`text-xl font-sans-bold mt-2 ${isDark ? "text-white" : "text-primary"}`}>
                     {title}
                 </Text>
             </View>

@@ -1,18 +1,24 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRouter } from "expo-router";
 import { verifyChangePhone } from "@/api/auth.api";
 import { toast } from "@/lib/toast";
+import { useAuth } from "@/hooks/auth/useAuth";
 import { VerifyChangePhoneSchema } from "@/validation/auth/schemas/verify-change-phone.schema";
 
 export const useVerifyChangePhone = () => {
+    const router = useRouter();
     const queryClient = useQueryClient();
+    const { clearUser } = useAuth();
 
     return useMutation({
         mutationFn: (value: VerifyChangePhoneSchema) => verifyChangePhone(value),
 
         onSuccess(data) {
-            toast.success(data?.message || "تم تغيير رقم الهاتف بنجاح");
-            queryClient.invalidateQueries({ queryKey: ["current-user"] });
-            queryClient.invalidateQueries({ queryKey: ["users"] });
+            toast.success(data?.message || "تم تغيير رقم الهاتف بنجاح، يرجى تسجيل الدخول بالرقم الجديد");
+            clearUser();
+            queryClient.removeQueries({ queryKey: ["current-user"] });
+            queryClient.clear();
+            router.replace("/(auth)/login");
         },
 
         onError(error: any) {

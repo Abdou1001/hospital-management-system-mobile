@@ -29,7 +29,7 @@ const ResetPasswordScreen = () => {
     const { isDark } = useThemeStore();
     const { mutate: resetMutate, isPending } = useResetPassword();
 
-    const [password, setPassword] = useState("");
+    const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
@@ -40,12 +40,12 @@ const ResetPasswordScreen = () => {
         let hasError = false;
         const newErrors: typeof errors = {};
 
-        if (!password || password.length < 6) {
+        if (!newPassword || newPassword.length < 6) {
             newErrors.password = "كلمة المرور يجب أن تكون 6 أحرف على الأقل";
             hasError = true;
         }
 
-        if (password !== confirmPassword) {
+        if (newPassword !== confirmPassword) {
             newErrors.confirmPassword = "كلمات المرور غير متطابقة";
             hasError = true;
         }
@@ -59,7 +59,7 @@ const ResetPasswordScreen = () => {
         resetMutate({
             phone_number: phone_number || "",
             resetCode: resetCode || "",
-            password,
+            newPassword: newPassword,
             confirmPassword,
         });
     };
@@ -75,7 +75,7 @@ const ResetPasswordScreen = () => {
                 <AuthHeader title="كلمة مرور جديدة" />
 
                 {/* كارت الفورم */}
-                <SafeAreaView className="flex-1 px-6 -mt-8 pb-10">
+                <SafeAreaView className="flex-1 px-6 -mt-8 pb-55">
                     <View
                         className={`w-full rounded-3xl border p-6 shadow-sm ${isDark
                                 ? "border-slate-800 bg-slate-800/90"
@@ -122,8 +122,8 @@ const ResetPasswordScreen = () => {
                                             : "border-slate-200 bg-slate-50"
                                     }`}>
                                 <TextInput
-                                    value={password}
-                                    onChangeText={setPassword}
+                                    value={newPassword}
+                                    onChangeText={setNewPassword}
                                     placeholder="••••••••"
                                     placeholderTextColor={isDark ? "#64748b" : "#94a3b8"}
                                     secureTextEntry={!showPassword}

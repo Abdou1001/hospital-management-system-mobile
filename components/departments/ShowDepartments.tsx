@@ -31,7 +31,7 @@ export const getDepartmentImageSource = (item: any) => {
         };
     }
 
-    return images.emergencyDep;
+    return;
 };
 
 const ShowDepartments: React.FC<ShowDepartmentsProps> = ({
@@ -42,7 +42,7 @@ const ShowDepartments: React.FC<ShowDepartmentsProps> = ({
     const {isDark} = useThemeStore();
     // Loading
     if (isLoading) {
-        return <DepartmentCardSkeleton count={limit || 8} />;
+        return <DepartmentCardSkeleton count={limit || 6} />;
     }
 
     /*
@@ -72,7 +72,7 @@ const ShowDepartments: React.FC<ShowDepartmentsProps> = ({
     }
 
     return (
-        <View className="mt-4 flex-row-reverse flex-wrap justify-between gap-y-4">
+        <View className="mt-4 flex-row-reverse flex-wrap justify-between gap-y-4 ">
             {list.map((item: any, index: number) => {
                 const id = item.depart_id || index;
 

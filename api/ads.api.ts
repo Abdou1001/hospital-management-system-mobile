@@ -6,7 +6,7 @@ import {AdsFilters} from "@/types/filter";
 /*                                  Get Ads                                   */
 /* -------------------------------------------------------------------------- */
 
-export async function getAds(filters: AdsFilters) {
+export async function getAds(filters?: AdsFilters) {
     const {data} = await api.get("/ads", {
         params: filters,
     });

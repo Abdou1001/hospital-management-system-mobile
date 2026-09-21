@@ -111,7 +111,7 @@ const CardDoctors = ({
                 ${
                     isDark
                         ? "border-slate-700/60 bg-slate-800"
-                        : "border-slate-100 bg-white"
+                        : "border-slate-200 bg-white"
                 }
                 ${className}
             `}>

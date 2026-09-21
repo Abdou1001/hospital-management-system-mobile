@@ -9,7 +9,7 @@ interface DoctorCardSkeletonProps {
 
 const SingleDoctorSkeleton = ({ isDark }: { isDark: boolean }) => (
     <View
-        className={`w-full overflow-hidden rounded-3xl border p-3.5 ${
+        className={`w-full overflow-hidden rounded-3xl mt-3 border p-3.5 ${
             isDark ? "border-slate-700/60 bg-slate-800/40" : "border-slate-100 bg-white"
         }`}>
         {/* Top row */}

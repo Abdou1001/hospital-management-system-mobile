@@ -24,7 +24,7 @@ const AuthHeader: React.FC<AuthHeaderProps> = ({
         if (onBack) {
             onBack();
         } else {
-            router.back();
+            router.replace("/(tabs)");
         }
     };
 

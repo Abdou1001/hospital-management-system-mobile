@@ -1,7 +1,7 @@
 import { icons } from "@/constants/icons";
 import { useAuth } from "@/hooks/auth/useAuth";
 import { useThemeStore } from "@/store/theme.store";
-import { useNotificationStore } from "@/store/notification.store";
+import { useNotifications } from "@/hooks/notifications/useNotifications";
 import { useRouter } from "expo-router";
 import React from "react";
 import { Image, Pressable, Text, View } from "react-native";
@@ -13,7 +13,7 @@ const HomeHeader = () => {
     const { isDark, toggleTheme } = useThemeStore();
     const { isAuthenticated, isLoading, role } = useAuth();
     const router = useRouter();
-    const unreadCount = useNotificationStore((state) => state.getUnreadCount());
+    const { unreadCount } = useNotifications();
     const isReception = role === "reception" || role === "admin";
 
     return (

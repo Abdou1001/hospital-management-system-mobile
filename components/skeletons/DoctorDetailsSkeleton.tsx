@@ -14,7 +14,7 @@ export const DoctorDetailsSkeleton: React.FC = () => {
         <View className="flex-1 bg-background dark:bg-slate-900">
             <SafeAreaView className="flex-1 p-5 pb-28">
                 <SkeletonWrapper>
-                    <View className="flex-1">
+                    <View>
                         {/* Header bar */}
                         <View
                             style={{

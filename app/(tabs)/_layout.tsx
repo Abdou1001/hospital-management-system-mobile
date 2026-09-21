@@ -48,9 +48,14 @@ const CustomTabBar = () => {
     );
 };
 
+export const unstable_settings = {
+    initialRouteName: "index",
+};
+
 const TabLayout = () => {
     return (
         <Tabs
+            initialRouteName="index"
             tabBar={() => <CustomTabBar />}
             screenOptions={{
                 headerShown: false,

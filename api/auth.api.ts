@@ -46,7 +46,7 @@ export const resendOtp = async (values: { phone_number: string }) => {
 export const resetPassword = async (values: {
     phone_number: string;
     resetCode?: string;
-    password: string;
+    newPassword: string;
     confirmPassword: string;
 }) => {
     const { data } = await api.post("/auth/reset-password", values);

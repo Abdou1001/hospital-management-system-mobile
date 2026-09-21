@@ -87,7 +87,7 @@ export default function NotificationsScreen() {
                             <Pressable
                                 key={filter.key}
                                 onPress={() => setSelectedFilter(filter.key)}
-                                className={`flex-row-reverse items-center justify-center gap-1.5 rounded-2xl min-w-[85px] p-3.5 py-3.5 border transition-all ${
+                                className={`flex-row-reverse items-center justify-center gap-1.5 rounded-2xl min-w-[85px] py-3.5 border transition-all ${
                                     isSelected
                                         ? "bg-main border-main shadow-xs"
                                         : isDark

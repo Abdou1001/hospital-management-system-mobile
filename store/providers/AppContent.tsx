@@ -32,10 +32,14 @@ const AppContent = () => {
     return (
         <View className="flex-1 relative">
             <Stack
+                initialRouteName="(tabs)"
                 screenOptions={{
                     headerShown: false,
-                }}
-            />
+                }}>
+                <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+                <Stack.Screen name="(auth)" options={{ headerShown: false }} />
+                <Stack.Screen name="(reception)" options={{ headerShown: false }} />
+            </Stack>
             <Toast config={toastConfig} />
         </View>
     );

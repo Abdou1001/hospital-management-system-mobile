@@ -5,7 +5,7 @@
 @import "nativewind/theme";
 
 @theme {
-    --color-background: var(--color-bg, #fff9e3);
+    --color-background: var(--color-bg, #F5F5F5);
     --color-foreground: var(--color-fg, #081126);
     --color-main: #16a34a;
     --color-card: var(--color-card-bg, #fff8e7);
@@ -47,7 +47,7 @@
 }
 
 :root {
-    --color-bg: #fff9e3;
+    --color-bg: #F5F5F5;
     --color-fg: #081126;
     --color-card-bg: #fff8e7;
     --color-muted-bg: #f6eecf;
@@ -309,6 +309,10 @@
 
     .auth-subtitle {
         @apply mt-2 max-w-[320px] text-center text-base font-sans-medium text-muted-foreground;
+    }
+
+    .bg-card{
+        @apply bg-background
     }
 
     .auth-card {

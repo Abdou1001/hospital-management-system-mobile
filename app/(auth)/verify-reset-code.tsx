@@ -149,7 +149,8 @@ const VerifyResetCodeScreen = () => {
                                     }
                                     keyboardType="number-pad"
                                     maxLength={6}
-                                    className={`w-full font-sans-bold text-center text-2xl tracking-widest ${
+                                    style={{ textAlign: "center" }}
+                                    className={`w-full font-sans-bold text-xl h-16 mt-3 tracking-widest ${
                                         isDark ? "text-white" : "text-slate-900"
                                     }`}
                                 />

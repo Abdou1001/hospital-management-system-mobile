@@ -22,10 +22,10 @@ function getDayNameFromDate(dateString?: string): string {
         if (!year || !month || !day) return "";
         const date = new Date(year, month - 1, day);
         const dayNames = [
-            "الأحد",
-            "الإثنين",
+            "الاحد",
+            "الاثنين",
             "الثلاثاء",
-            "الأربعاء",
+            "الاربعاء",
             "الخميس",
             "الجمعة",
             "السبت",
@@ -124,13 +124,27 @@ const AppointmentReviewModal: React.FC<AppointmentReviewModalProps> = ({
             <ExpandableModal
                 visible={visible}
                 onClose={() => {
+                    if (isReceiptOpen) {
+                        setIsReceiptOpen(false);
+                        return;
+                    }
                     if (!isSubmitting) onClose();
                 }}
                 title="مراجعة طلب الحجز"
                 subtitle={`حجز رقم #${appointment.appointment_id} - قيد المراجعة`}
                 iconName="clipboard-outline"
                 iconColor="#10b981"
-                iconBgClass="bg-main/15">
+                iconBgClass="bg-main/15"
+                overlay={
+                    appointment.payment_receipt ? (
+                        <PaymentReceiptModal
+                            appointment={appointment}
+                            isReceiptOpen={isReceiptOpen}
+                            setIsReceiptOpen={setIsReceiptOpen}
+                            inModal
+                        />
+                    ) : null
+                }>
                 <View className="p-4 space-y-4">
                     {/* بطاقة معلومات المريض */}
                     <View
@@ -462,15 +476,6 @@ const AppointmentReviewModal: React.FC<AppointmentReviewModalProps> = ({
                     </View>
                 </View>
             </ExpandableModal>
-
-            {/* معاينة سند الدفع */}
-            {appointment.payment_receipt ? (
-                <PaymentReceiptModal
-                    appointment={appointment}
-                    isReceiptOpen={isReceiptOpen}
-                    setIsReceiptOpen={setIsReceiptOpen}
-                />
-            ) : null}
         </>
     );
 };

@@ -6,7 +6,7 @@ import {
     GestureHandlerRootView,
 } from "react-native-gesture-handler";
 import React, {useEffect} from "react";
-import {Image, Modal, Pressable, Text, View} from "react-native";
+import {Image, Modal, Pressable, StyleSheet, Text, View} from "react-native";
 
 import Animated, {
     useAnimatedStyle,
@@ -21,14 +21,36 @@ const MAX_SCALE = 4;
 // أقصى مقدار لتحريك الصورة
 const MAX_TRANSLATE = 150;
 
+const getReceiptSource = (receipt: any) => {
+    if (!receipt) return null;
+    if (typeof receipt === "object" && receipt.uri) {
+        return receipt;
+    }
+    if (typeof receipt === "string" && receipt.trim().length > 0) {
+        if (receipt.startsWith("http://") || receipt.startsWith("https://")) {
+            return { uri: receipt };
+        }
+        const baseUrl =
+            process.env.EXPO_PUBLIC_STORAGE_URL ||
+            process.env.EXPO_PUBLIC_API_URL ||
+            "";
+        const cleanBase = baseUrl.replace(/\/api\/?$/, "").replace(/\/$/, "");
+        const cleanPath = receipt.startsWith("/") ? receipt : `/${receipt}`;
+        return { uri: `${cleanBase}${cleanPath}` };
+    }
+    return null;
+};
+
 const PaymentReceiptModal = ({
     isReceiptOpen,
     setIsReceiptOpen,
     appointment,
+    inModal = false,
 }: {
     isReceiptOpen: boolean;
     setIsReceiptOpen: (value: boolean) => void;
     appointment: any;
+    inModal?: boolean;
 }) => {
     const {isDark} = useThemeStore();
 
@@ -179,6 +201,84 @@ const PaymentReceiptModal = ({
         setIsReceiptOpen(false);
     };
 
+    if (!isReceiptOpen) return null;
+
+    const receiptSource = getReceiptSource(appointment?.payment_receipt);
+
+    const content = (
+        <View
+            style={inModal ? StyleSheet.absoluteFill : {flex: 1}}
+            className="z-50 items-center justify-center bg-black/80 p-5">
+            <View
+                className={`w-full max-w-lg overflow-hidden rounded-3xl border p-5 ${
+                    isDark
+                        ? "border-slate-700 bg-slate-900"
+                        : "border-slate-100 bg-white"
+                }`}>
+                {/* Header */}
+
+                <View className="flex-row-reverse items-center justify-between border-b border-border pb-3 dark:border-slate-800">
+                    <Text
+                        className={`font-sans-bold text-base ${
+                            isDark ? "text-white" : "text-slate-900"
+                        }`}>
+                        سند الدفع الإلكتروني
+                    </Text>
+
+                    <Pressable
+                        onPress={handleClose}
+                        className="size-8 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
+                        <Ionicons
+                            name="close"
+                            size={18}
+                            color={isDark ? "#94a3b8" : "#64748b"}
+                        />
+                    </Pressable>
+                </View>
+
+                {/* Receipt */}
+
+                <View className="my-4 h-150 w-full overflow-hidden rounded-2xl bg-slate-100 dark:bg-slate-800">
+                    {receiptSource ? (
+                        <GestureDetector gesture={composedGesture}>
+                            <AnimatedImage
+                                source={receiptSource}
+                                resizeMode="contain"
+                                style={[
+                                    {
+                                        width: "100%",
+                                        height: "100%",
+                                    },
+                                    animatedImageStyle,
+                                ]}
+                            />
+                        </GestureDetector>
+                    ) : (
+                        <View className="size-full items-center justify-center p-4">
+                            <Text className="text-center font-sans-medium text-xs text-muted-foreground">
+                                تعذر تحميل صورة سند الدفع
+                            </Text>
+                        </View>
+                    )}
+                </View>
+
+                {/* Close Button */}
+
+                <Pressable
+                    onPress={handleClose}
+                    className="h-12 w-full items-center justify-center rounded-2xl bg-main">
+                    <Text className="font-sans-bold text-sm text-white">
+                        إغلاق
+                    </Text>
+                </Pressable>
+            </View>
+        </View>
+    );
+
+    if (inModal) {
+        return content;
+    }
+
     return (
         <Modal
             visible={isReceiptOpen}
@@ -186,65 +286,7 @@ const PaymentReceiptModal = ({
             animationType="fade"
             onRequestClose={handleClose}>
             <GestureHandlerRootView style={{flex: 1}}>
-                <View className="flex-1 items-center justify-center bg-black/80 p-5">
-                    <View
-                        className={`w-full max-w-lg overflow-hidden rounded-3xl border p-5 ${
-                            isDark
-                                ? "border-slate-700 bg-slate-900"
-                                : "border-slate-100 bg-white"
-                        }`}>
-                        {/* Header */}
-
-                        <View className="flex-row-reverse items-center justify-between border-b border-border pb-3 dark:border-slate-800">
-                            <Text
-                                className={`font-sans-bold text-base ${
-                                    isDark ? "text-white" : "text-slate-900"
-                                }`}>
-                                سند الدفع الإلكتروني
-                            </Text>
-
-                            <Pressable
-                                onPress={handleClose}
-                                className="size-8 items-center justify-center rounded-full bg-slate-100 dark:bg-slate-800">
-                                <Ionicons
-                                    name="close"
-                                    size={18}
-                                    color={isDark ? "#94a3b8" : "#64748b"}
-                                />
-                            </Pressable>
-                        </View>
-
-                        {/* Receipt */}
-
-                        <View className="my-4 h-150 w-full overflow-hidden rounded-2xl bg-slate-100 dark:bg-slate-800">
-                            <GestureDetector gesture={composedGesture}>
-                                <AnimatedImage
-                                    source={{
-                                        uri: appointment.payment_receipt,
-                                    }}
-                                    resizeMode="contain"
-                                    style={[
-                                        {
-                                            width: "100%",
-                                            height: "100%",
-                                        },
-                                        animatedImageStyle,
-                                    ]}
-                                />
-                            </GestureDetector>
-                        </View>
-
-                        {/* Close Button */}
-
-                        <Pressable
-                            onPress={handleClose}
-                            className="h-12 w-full items-center justify-center rounded-2xl bg-main">
-                            <Text className="font-sans-bold text-sm text-white">
-                                إغلاق
-                            </Text>
-                        </Pressable>
-                    </View>
-                </View>
+                {content}
             </GestureHandlerRootView>
         </Modal>
     );

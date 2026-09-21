@@ -68,8 +68,8 @@ const NotificationHeader: React.FC<NotificationHeaderProps> = ({
                         </Text>
 
                         {unreadCount > 0 && (
-                            <View className="rounded-full bg-main px-2.5 py-0.5 shadow-xs">
-                                <Text className="font-sans-bold text-xs text-white">
+                            <View className="rounded-full bg-main px-2 py-1 shadow-xs mb-1">
+                                <Text className="font-sans-bold text-xs text-white mt-0.5">
                                     {unreadCount} جديدة
                                 </Text>
                             </View>
@@ -104,7 +104,7 @@ const NotificationHeader: React.FC<NotificationHeaderProps> = ({
                                     size={14}
                                     color="#10b981"
                                 />
-                                <Text className="font-sans-bold text-xs text-emerald-600 dark:text-emerald-400">
+                                <Text className="font-sans-bold text-xs text-emerald-600 dark:text-emerald-400 mt-0.5">
                                     تحديد الكل كمقروء
                                 </Text>
                             </Pressable>
@@ -123,7 +123,7 @@ const NotificationHeader: React.FC<NotificationHeaderProps> = ({
                                 size={14}
                                 color={isDark ? "#94a3b8" : "#64748b"}
                             />
-                            <Text className="font-sans-medium text-xs text-muted-foreground dark:text-slate-400">
+                            <Text className="font-sans-medium text-xs text-muted-foreground dark:text-slate-400 mt-0.5">
                                 مسح الكل
                             </Text>
                         </Pressable>

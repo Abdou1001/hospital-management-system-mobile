@@ -77,7 +77,7 @@ const Departments = () => {
             <FlatList
                 data={departments}
                 keyExtractor={(item, index) => String(item.depart_id ?? index)}
-                numColumns={4}
+                numColumns={3}
                 columnWrapperStyle={{
                     justifyContent: "space-between",
                     marginBottom: 16,
@@ -105,7 +105,7 @@ const Departments = () => {
                 ListEmptyComponent={
                     isLoading ? (
                         <View className="py-2">
-                            <DepartmentCardSkeleton count={12} />
+                            <DepartmentCardSkeleton count={15} />
                         </View>
                     ) : isError ? (
                         <View className="py-16 items-center justify-center rounded-3xl border border-red-500/20 bg-red-50/10 p-6">

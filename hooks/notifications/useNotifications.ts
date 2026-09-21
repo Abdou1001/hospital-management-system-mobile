@@ -18,6 +18,7 @@ export function useNotifications(filter: NotificationFilter = "all") {
     const storeNotifications = useNotificationStore((state) => state.notifications);
     const storeSetNotifications = useNotificationStore((state) => state.setNotifications);
     const storeSetUnreadCount = useNotificationStore((state) => state.setUnreadCount);
+    const storeUnreadCount = useNotificationStore((state) => state.unreadCount);
     const storeMarkAsRead = useNotificationStore((state) => state.markAsRead);
     const storeMarkAllAsRead = useNotificationStore((state) => state.markAllAsRead);
     const storeDelete = useNotificationStore((state) => state.deleteNotification);
@@ -36,6 +37,7 @@ export function useNotifications(filter: NotificationFilter = "all") {
             return list;
         },
         staleTime: 1000 * 30, // 30 sec
+        refetchInterval: 1000 * 60, // 1 min auto-refresh
     });
 
     const notifications = query.data ?? storeNotifications;
@@ -66,7 +68,10 @@ export function useNotifications(filter: NotificationFilter = "all") {
     // Counts for tabs
     const counts = useMemo(() => {
         const allCount = notifications.length;
-        const unreadCount = notifications.filter((n) => !n.is_read).length;
+        const unreadCount =
+            typeof storeUnreadCount === "number" && storeUnreadCount > 0
+                ? storeUnreadCount
+                : notifications.filter((n) => !n.is_read).length;
         const appointmentCount = notifications.filter(
             (n) => n.type === "appointment" || n.type === "reminder"
         ).length;
@@ -83,7 +88,7 @@ export function useNotifications(filter: NotificationFilter = "all") {
             appointment: appointmentCount,
             system: systemCount,
         };
-    }, [notifications]);
+    }, [notifications, storeUnreadCount]);
 
     // Mark as read mutation
     const markAsReadMutation = useMutation({

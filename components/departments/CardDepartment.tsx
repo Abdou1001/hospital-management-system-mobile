@@ -1,3 +1,4 @@
+import { useThemeStore } from "@/store/theme.store";
 import {useRouter} from "expo-router";
 import React from "react";
 import {
@@ -24,6 +25,8 @@ const CardDepartment: React.FC<CardDepartmentProps> = ({
     className = "",
 }) => {
     const router = useRouter();
+    // حالة الـ Dark Mode
+        const {isDark} = useThemeStore();
 
     const handlePress = () => {
         if (onPress) {
@@ -37,7 +40,11 @@ const CardDepartment: React.FC<CardDepartmentProps> = ({
         <TouchableOpacity
             activeOpacity={0.75}
             onPress={handlePress}
-            className={`w-[23%] items-center justify-center py-3.5 px-1 rounded-2xl bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700/60 shadow-sm ${className}`}>
+            className={`w-[30%] items-center justify-center shadow-sm py-3.5 px-1 rounded-2xl bg-white dark:bg-slate-800 border ${
+                isDark
+                    ? "border-slate-700/60 bg-slate-800"
+                    : "border-slate-200 bg-white"
+            } ${className}`}>
             <View className="w-15 h-15 items-center justify-center mb-2">
                 <Image
                     source={image}
@@ -47,7 +54,7 @@ const CardDepartment: React.FC<CardDepartmentProps> = ({
             </View>
             <Text
                 numberOfLines={1}
-                className="text-xs font-sans-bold text-slate-800 dark:text-slate-100 text-center mt-1">
+                className="text-sm font-sans-bold text-slate-800 dark:text-slate-100 text-center mt-1">
                 {name}
             </Text>
         </TouchableOpacity>

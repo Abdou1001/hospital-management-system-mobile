@@ -184,7 +184,7 @@ const AppointmentBookingScreen = () => {
 
     if (!doctor) {
         return (
-            <SafeAreaView className="flex-1 bg-background p-5 dark:bg-slate-900">
+            <SafeAreaView className="flex-1 bg-background dark:bg-slate-900 p-5">
                 {/* Left Side: Back Arrow Button */}
                 <Pressable
                     onPress={() => router.back()}
@@ -201,7 +201,10 @@ const AppointmentBookingScreen = () => {
                     />
                 </Pressable>
                 <View className="flex-1 items-center justify-center">
-                    <Text className="font-sans-bold text-lg text-primary dark:text-white">
+                    <Text
+                        className={`font-sans-bold text-lg ${
+                            isDark ? "text-white" : "text-primary"
+                        }`}>
                         الطبيب غير متاح
                     </Text>
                 </View>
@@ -211,11 +214,11 @@ const AppointmentBookingScreen = () => {
 
     if (!isAuthenticated) {
         return (
-            <SafeAreaView className="flex-1 bg-background p-5 dark:bg-slate-900">
+            <SafeAreaView className="flex-1 bg-background dark:bg-slate-900 p-5">
                 <Pressable
                     onPress={() => router.back()}
                     className={`mb-4 size-10 items-center justify-center rounded-full ${
-                        isDark ? "bg-slate-800" : "bg-slate-100"
+                        isDark ? "bg-slate-800 active:bg-slate-700" : "bg-slate-100 active:bg-slate-200"
                     }`}>
                     <Image
                         source={icons.back}
@@ -224,16 +227,27 @@ const AppointmentBookingScreen = () => {
                         style={{tintColor: isDark ? "#ffffff" : "#1e293b"}}
                     />
                 </Pressable>
-                <View className="flex-1 items-center justify-center rounded-3xl border border-border bg-card p-6">
+                <View
+                    className={`flex-1 items-center justify-center rounded-3xl border p-6 ${
+                        isDark
+                            ? "border-slate-800 bg-slate-850"
+                            : "border-slate-100 bg-white"
+                    }`}>
                     <Ionicons
                         name="lock-closed-outline"
                         size={48}
                         color="#10b981"
                     />
-                    <Text className="mt-4 text-center font-sans-bold text-lg text-primary dark:text-white">
+                    <Text
+                        className={`mt-4 text-center font-sans-bold text-lg ${
+                            isDark ? "text-white" : "text-primary"
+                        }`}>
                         يجب تسجيل الدخول أولاً
                     </Text>
-                    <Text className="mt-2 text-center font-sans-medium text-sm text-muted-foreground dark:text-slate-400">
+                    <Text
+                        className={`mt-2 text-center font-sans-medium text-sm ${
+                            isDark ? "text-slate-400" : "text-muted-foreground"
+                        }`}>
                         لحجز موعد يرجى تسجيل الدخول أو إنشاء حساب جديد
                     </Text>
 
@@ -241,7 +255,7 @@ const AppointmentBookingScreen = () => {
                     <Pressable
                         onPress={() => router.push("/(auth)/login")}
                         className="mt-5 w-full items-center justify-center rounded-xl bg-main py-3.5 active:opacity-80">
-                        <Text className="text-base font-sans-bold text-background">
+                        <Text className="text-base font-sans-bold text-white">
                             تسجيل الدخول
                         </Text>
                     </Pressable>
@@ -249,8 +263,11 @@ const AppointmentBookingScreen = () => {
                     {/* زر إنشاء حساب جديد */}
                     <Pressable
                         onPress={() => router.push("/(auth)/register")}
-                        className="mt-5 w-full items-center justify-center rounded-xl border-2 border-main bg-transparent py-3.5 active:opacity-80">
-                        <Text className="text-base font-sans-bold text-main dark:text-emerald-400">
+                        className={`mt-5 w-full items-center justify-center rounded-xl border-2 border-main bg-transparent py-3.5 active:opacity-80`}>
+                        <Text
+                            className={`text-base font-sans-bold ${
+                                isDark ? "text-emerald-400" : "text-main"
+                            }`}>
                             إنشاء حساب جديد
                         </Text>
                     </Pressable>
@@ -260,7 +277,9 @@ const AppointmentBookingScreen = () => {
     }
 
     return (
-        <View className="flex-1 bg-background dark:bg-slate-900">
+        <SafeAreaView
+            edges={["top", "left", "right"]}
+            className="flex-1 bg-background dark:bg-slate-900">
             <ScrollView
                 className="flex-1"
                 contentContainerStyle={{flexGrow: 1, paddingBottom: 50}}
@@ -268,7 +287,7 @@ const AppointmentBookingScreen = () => {
                 keyboardShouldPersistTaps="handled"
                 keyboardDismissMode="on-drag"
                 nestedScrollEnabled={true}>
-                <SafeAreaView className="p-5">
+                <View className="p-5">
                     {/* ============================
                             الهيدر
                         ============================ */}
@@ -311,7 +330,7 @@ const AppointmentBookingScreen = () => {
                     <View
                         className={`rounded-3xl border p-5 shadow-sm ${
                             isDark
-                                ? "border-slate-800 bg-slate-800/90"
+                                ? "border-slate-800 bg-slate-850"
                                 : "border-slate-100 bg-white"
                         }`}>
                         <Text
@@ -322,7 +341,9 @@ const AppointmentBookingScreen = () => {
                             بيانات المريض
                         </Text>
                         <Text
-                            className="mt-1 font-sans-medium text-xs text-muted-foreground dark:text-slate-400"
+                            className={`mt-1 font-sans-medium text-xs ${
+                                isDark ? "text-slate-400" : "text-muted-foreground"
+                            }`}
                             style={{textAlign: "right"}}>
                             يرجى ملء البيانات التالية لإتمام الحجز
                         </Text>
@@ -376,7 +397,7 @@ const AppointmentBookingScreen = () => {
                         <View
                             className={`mt-5 rounded-2xl border p-4 ${
                                 isDark
-                                    ? "border-amber-500/20 bg-amber-500/5"
+                                    ? "border-amber-500/20 bg-amber-500/10"
                                     : "border-amber-200 bg-amber-50"
                             }`}>
                             <View className="flex-row-reverse items-start gap-2">
@@ -387,12 +408,16 @@ const AppointmentBookingScreen = () => {
                                 />
                                 <View className="flex-1">
                                     <Text
-                                        className="font-sans-bold text-sm text-amber-700 dark:text-amber-400"
+                                        className={`font-sans-bold text-sm ${
+                                            isDark ? "text-amber-400" : "text-amber-700"
+                                        }`}
                                         style={{textAlign: "right"}}>
                                         تنبيه مهم
                                     </Text>
                                     <Text
-                                        className="mt-1 font-sans-medium text-xs text-amber-600 dark:text-amber-300 leading-6"
+                                        className={`mt-1 font-sans-medium text-xs leading-6 ${
+                                            isDark ? "text-amber-300" : "text-amber-600"
+                                        }`}
                                         style={{textAlign: "right"}}>
                                         • حافظ على سند الدفع وأحضره معك عند
                                         مراجعة الطبيب{"\n"}• اذا كان موعدك
@@ -433,7 +458,7 @@ const AppointmentBookingScreen = () => {
                             )}
                         </Pressable>
                     </View>
-                </SafeAreaView>
+                </View>
             </ScrollView>
 
             {/* مودال النجاح */}
@@ -443,7 +468,7 @@ const AppointmentBookingScreen = () => {
                 onGoBack={handleGoBack}
                 isDark={isDark}
             />
-        </View>
+        </SafeAreaView>
     );
 };
 

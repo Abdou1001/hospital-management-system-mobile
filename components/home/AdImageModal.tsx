@@ -27,7 +27,7 @@ const AdImageModal = ({
     ad,
     setSelectedAd,
 }: {
-    ad: string | null;
+    ad: any;
     setSelectedAd: (value: null) => void;
 }) => {
     const {isDark} = useThemeStore();

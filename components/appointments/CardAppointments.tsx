@@ -24,10 +24,10 @@ function getDayNameFromDate(dateString?: string): string {
         if (!year || !month || !day) return "";
         const date = new Date(year, month - 1, day);
         const dayNames = [
-            "الأحد",
-            "الإثنين",
+            "الاحد",
+            "الاثنين",
             "الثلاثاء",
-            "الأربعاء",
+            "الاربعاء",
             "الخميس",
             "الجمعة",
             "السبت",
@@ -195,7 +195,7 @@ const CardAppointments: React.FC<CardAppointmentsProps> = ({
                 } ${
                     isDark
                         ? "border-slate-700/60 bg-slate-800"
-                        : "border-slate-100 bg-white"
+                        : "border-slate-200 bg-white"
                 } ${className}`}>
                 {/* الجزء العلوي: صورة الطبيب / العيادة والمعلومات والحالة */}
                 <View className="flex-row-reverse">

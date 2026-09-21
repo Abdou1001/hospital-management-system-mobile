@@ -21,14 +21,15 @@ const CARD_HEIGHT = 300;
 const fallbackAds = [
     { id: "1", image: images.ad_1 },
     { id: "2", image: images.ad_2 },
-    { id: "3", image: images.ad_3 },
-    { id: "4", image: images.ad_2 },
 ];
 
 const HomeAds = () => {
     const { isDark } = useThemeStore();
-    // جلب البيانات
-    const { data, isLoading } = useAds();
+    // جلب البيانات (الإعلانات النشطة وغير المنتهية)
+    const { data, isLoading } = useAds({
+        status: "active",
+        expired: "false",
+    });
     // للـModal
     const [selectedAd, setSelectedAd] = useState<any>(null);
 
@@ -37,10 +38,14 @@ const HomeAds = () => {
 
     const flatListRef = useRef<FlatList>(null);
 
-    // استخراج الإعلانات من البيانات القادمة من الداتابيس (data.results أو data.data أو الاحتياطية)
-    const apiAds = Array.isArray(data?.results)
-        ? data.results
-        : [];
+    // استخراج الإعلانات والتأكد من أنها نشطة وغير منتهية
+    const apiAds = (Array.isArray(data?.results) ? data.results : []).filter(
+        (ad: any) => {
+            if (ad.status && ad.status !== "active") return false;
+            if (ad.expired === true) return false;
+            return true;
+        },
+    );
 
     const ads = apiAds.length > 0 ? apiAds : fallbackAds;
 

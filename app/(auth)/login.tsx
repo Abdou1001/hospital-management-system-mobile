@@ -74,7 +74,7 @@ const LoginScreen = () => {
             },
             {
                 onSuccess: () => {
-                    router.back();
+                    router.replace("/(tabs)");
                 },
             },
         );
@@ -261,7 +261,7 @@ const LoginScreen = () => {
                                 onPress={() =>
                                     router.push("/(auth)/register" as any)
                                 }
-                                className="mt-3 h-13 w-full items-center justify-center rounded-2xl border-2 border-main bg-transparent py-3.5">
+                                className="mt-3 h-13 w-full items-center justify-center rounded-2xl border-2 border-main bg-transparent py-2">
                                 <Text className="font-sans-bold text-sm text-main dark:text-green-400">
                                     تسجيل حساب جديد
                                 </Text>

@@ -249,8 +249,9 @@ const ChangePhoneModal: React.FC<ChangePhoneModalProps> = ({
                                     isDark ? "#64748b" : "#94a3b8"
                                 }
                                 keyboardType="number-pad"
+                                style={{textAlign: "center"}}
                                 maxLength={6}
-                                className={`w-full font-sans-bold text-center text-2xl tracking-widest ${
+                                className={`w-full font-sans-bold text-sm tracking-widest ${
                                     isDark
                                         ? "text-white"
                                         : "text-slate-900"

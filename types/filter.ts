@@ -112,7 +112,7 @@ export type AdsFilters = {
 export const ADS_FILTERS: AdsFilters = {
     page: 1,
     limit: 20,
-    status: "",
-    expired: "",
+    status: "active",
+    expired: "false",
     sort: "-created_at",
 };

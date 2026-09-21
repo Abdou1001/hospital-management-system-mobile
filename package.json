@@ -1,5 +1,6 @@
 {
   "name": "mobile",
+  "author": "Abdulrahman Ahmed Bin Saad",
   "main": "expo-router/entry",
   "version": "1.0.0",
   "scripts": {

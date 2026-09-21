@@ -18,6 +18,10 @@ import { useCurrentUser } from "@/hooks/auth/useCurrentUser";
 import AppContent from "@/store/providers/AppContent";
 import { registerForPushNotificationsAsync } from "@/services/notifications/registerForPushNotifications";
 
+export const unstable_settings = {
+    initialRouteName: "(tabs)",
+};
+
 export default function App() {
     const [fontsLoaded] = useFonts({
         Cairo_400Regular,
