@@ -14,11 +14,13 @@
     },
     "preview": {
       "distribution": "internal",
+      "autoIncrement": true,
       "android": {
         "buildType": "apk"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://your-production-api.com/api",
+        "EXPO_PUBLIC_API_URL": "https://hospital-management-system-backend-production-4e9c.up.railway.app/api",
+        "EXPO_PUBLIC_STORAGE_URL": "https://hospital-management-system-backend-production-4e9c.up.railway.app",
         "PLATFORM_FEE": "500"
       }
     },
@@ -31,7 +33,8 @@
         "image": "latest"
       },
       "env": {
-        "EXPO_PUBLIC_API_URL": "https://your-production-api.com/api",
+        "EXPO_PUBLIC_API_URL": "https://hospital-management-system-backend-production-4e9c.up.railway.app/api",
+        "EXPO_PUBLIC_STORAGE_URL": "https://hospital-management-system-backend-production-4e9c.up.railway.app",
         "PLATFORM_FEE": "500"
       }
     }

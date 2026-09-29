@@ -3,6 +3,7 @@ import AppSettingsSection from "@/components/settings/AppSettingsSection";
 import GuestLoginCard from "@/components/settings/GuestLoginCard";
 import HospitalInfoCard from "@/components/settings/HospitalInfoCard";
 import LogoutButton from "@/components/settings/LogoutButton";
+import SettingsFooterLinks from "@/components/settings/SettingsFooterLinks";
 import UserProfileCard from "@/components/settings/UserProfileCard";
 import UserProfileSkeleton from "@/components/skeletons/UserProfileSkeleton";
 import { icons } from "@/constants/icons";
@@ -55,6 +56,9 @@ const Settings = () => {
 
                 {/* 4. زر تسجيل الخروج (يظهر فقط إذا كان المستخدم مسجلاً) */}
                 {isAuthenticated && <LogoutButton />}
+
+                {/* 5. روابط من نحن وسياسة الاستخدام */}
+                <SettingsFooterLinks />
             </SafeAreaView>
         </ScrollView>
     );

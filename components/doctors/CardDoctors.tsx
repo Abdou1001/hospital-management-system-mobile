@@ -1,8 +1,7 @@
 import images from "@/constants/images";
-import {useThemeStore} from "@/store/theme.store";
-import {useRouter} from "expo-router";
-import React from "react";
-import {Image, ImageSourcePropType, Pressable, Text, View} from "react-native";
+import { useThemeStore } from "@/store/theme.store";
+import { useRouter } from "expo-router";
+import { Image, ImageSourcePropType, Pressable, Text, View } from "react-native";
 
 export interface DoctorData {
     doctor_id: string | number;
@@ -59,7 +58,7 @@ const CardDoctors = ({
     const router = useRouter();
 
     // حالة الـ Dark Mode
-    const {isDark} = useThemeStore();
+    const { isDark } = useThemeStore();
 
     // الضغط على الكارد
     const handlePress = () => {
@@ -96,7 +95,7 @@ const CardDoctors = ({
     const bio = doctor.bio?.trim() || "لا توجد نبذة عن الطبيب";
 
     // عرض جزء مختصر من الـ bio
-    const shortBio = bio.length > 90 ? `${bio.substring(0, 90)}...` : bio;
+    const shortBio = bio.length > 70 ? `${bio.substring(0, 70)}...` : bio;
 
     return (
         <Pressable
@@ -108,10 +107,9 @@ const CardDoctors = ({
                 border
                 p-3
                 shadow-sm
-                ${
-                    isDark
-                        ? "border-slate-700/60 bg-slate-800"
-                        : "border-slate-200 bg-white"
+                ${isDark
+                    ? "border-slate-700/60 bg-slate-800"
+                    : "border-slate-200 bg-white"
                 }
                 ${className}
             `}>
@@ -157,21 +155,19 @@ const CardDoctors = ({
                                             rounded-full
                                             px-3
                                             py-1.5
-                                            ${
-                                                isDark
-                                                    ? "bg-green-900/40"
-                                                    : "bg-green-50"
-                                            }
+                                            ${isDark
+                                            ? "bg-green-900/40"
+                                            : "bg-green-50"
+                                        }
                                         `}>
                                     <Text
                                         className={`
                                                 text-xs
                                                 font-sans-semibold
-                                                ${
-                                                    isDark
-                                                        ? "text-green-300"
-                                                        : "text-green-700"
-                                                }
+                                                ${isDark
+                                                ? "text-green-300"
+                                                : "text-green-700"
+                                            }
                                             `}>
                                         {department}
                                     </Text>
@@ -191,10 +187,9 @@ const CardDoctors = ({
                                     className={`
                                         text-xs
                                         font-sans-medium
-                                        ${
-                                            isDark
-                                                ? "text-slate-300"
-                                                : "text-slate-500"
+                                        ${isDark
+                                            ? "text-slate-300"
+                                            : "text-slate-500"
                                         }
                                     `}>
                                     لا يوجد تخصص
@@ -222,12 +217,13 @@ const CardDoctors = ({
             {/* الأزرار */}
             <View className="mt-5 flex-row-reverse gap-4">
                 {/* Primary Button - حجز موعد */}
-                <Pressable
-                    onPress={(event) => {
-                        event.stopPropagation();
-                        handleBookPress();
-                    }}
-                    className="
+                {doctor.status == "active" && (
+                    <Pressable
+                        onPress={(event) => {
+                            event.stopPropagation();
+                            handleBookPress();
+                        }}
+                        className="
                         flex-1
                         items-center
                         justify-center
@@ -235,15 +231,15 @@ const CardDoctors = ({
                         bg-main
                         py-3
                     ">
-                    <Text
-                        className="
+                        <Text
+                            className="
                             text-sm
                             font-sans-bold
                             text-white
                         ">
-                        حجز موعد
-                    </Text>
-                </Pressable>
+                            حجز موعد
+                        </Text>
+                    </Pressable>)}
 
                 {/* Secondary Button - اقرأ المزيد */}
                 <Pressable
@@ -258,10 +254,9 @@ const CardDoctors = ({
                         rounded-xl
                         border
                         py-3
-                        ${
-                            isDark
-                                ? "border-green-400 bg-transparent"
-                                : "border-green-600 bg-transparent"
+                        ${isDark
+                            ? "border-green-400 bg-transparent"
+                            : "border-green-600 bg-transparent"
                         }
                     `}>
                     <Text

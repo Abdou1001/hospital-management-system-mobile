@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { styled } from "nativewind";
-import React, { useState } from "react";
+import { useState } from "react";
 import {
     ActivityIndicator,
     Keyboard,
@@ -60,8 +60,8 @@ const LoginScreen = () => {
 
             toast.error(
                 loginErr ||
-                    passErr ||
-                    "يرجى كتابة رقم الهاتف / البريد وكلمة المرور بشكل صحيح",
+                passErr ||
+                "يرجى كتابة رقم الهاتف / البريد وكلمة المرور بشكل صحيح",
             );
             return;
         }
@@ -93,16 +93,14 @@ const LoginScreen = () => {
                 {/* كارت فورم تسجيل الدخول */}
                 <SafeAreaView className="flex-1 px-6 -mt-8 pb-10">
                     <View
-                        className={`w-full rounded-3xl border p-6 shadow-sm ${
-                            isDark
+                        className={`w-full rounded-3xl border p-6 shadow-sm ${isDark
                                 ? "border-slate-800 bg-slate-800/90"
                                 : "border-slate-100 bg-white"
-                        }`}>
+                            }`}>
                         {/* العنوان */}
                         <Text
-                            className={`font-sans-bold text-2xl ${
-                                isDark ? "text-white" : "text-slate-800"
-                            }`}
+                            className={`font-sans-bold text-2xl ${isDark ? "text-white" : "text-slate-800"
+                                }`}
                             style={{ textAlign: "right" }}>
                             تسجيل الدخول
                         </Text>
@@ -125,20 +123,18 @@ const LoginScreen = () => {
                         {/* حقل 1: رقم الهاتف أو البريد الإلكتروني */}
                         <View className="mt-6">
                             <Text
-                                className={`mb-2 font-sans-bold text-sm ${
-                                    isDark ? "text-slate-200" : "text-slate-700"
-                                }`}
+                                className={`mb-2 font-sans-bold text-sm ${isDark ? "text-slate-200" : "text-slate-700"
+                                    }`}
                                 style={{ textAlign: "right" }}>
                                 رقم الهاتف أو البريد الإلكتروني
                             </Text>
                             <View
-                                className={`h-14 w-full flex-row-reverse items-center rounded-2xl border px-4 ${
-                                    errors.login
+                                className={`h-14 w-full flex-row-reverse items-center rounded-2xl border px-4 ${errors.login
                                         ? "border-red-500 bg-red-50/20"
                                         : isDark
-                                          ? "border-slate-700 bg-slate-900/60"
-                                          : "border-slate-200 bg-slate-50"
-                                }`}>
+                                            ? "border-slate-700 bg-slate-900/60"
+                                            : "border-slate-200 bg-slate-50"
+                                    }`}>
                                 <TextInput
                                     value={loginInput}
                                     onChangeText={setLoginInput}
@@ -148,9 +144,8 @@ const LoginScreen = () => {
                                     }
                                     keyboardType="default"
                                     autoCapitalize="none"
-                                    className={`flex-1 font-sans-medium text-base ${
-                                        isDark ? "text-white" : "text-slate-900"
-                                    }`}
+                                    className={`flex-1 font-sans-medium text-base mt-2 ${isDark ? "text-white" : "text-slate-900"
+                                        }`}
                                     style={{ textAlign: "right" }}
                                 />
                             </View>
@@ -166,20 +161,18 @@ const LoginScreen = () => {
                         {/* حقل 2: كلمة المرور */}
                         <View className="mt-4">
                             <Text
-                                className={`mb-2 font-sans-bold text-sm ${
-                                    isDark ? "text-slate-200" : "text-slate-700"
-                                }`}
+                                className={`mb-2 font-sans-bold text-sm ${isDark ? "text-slate-200" : "text-slate-700"
+                                    }`}
                                 style={{ textAlign: "right" }}>
                                 كلمة المرور
                             </Text>
                             <View
-                                className={`h-14 w-full flex-row-reverse items-center rounded-2xl border px-4 ${
-                                    errors.password
+                                className={`h-14 w-full flex-row-reverse items-center rounded-2xl border px-4 ${errors.password
                                         ? "border-red-500 bg-red-50/20"
                                         : isDark
-                                          ? "border-slate-700 bg-slate-900/60"
-                                          : "border-slate-200 bg-slate-50"
-                                }`}>
+                                            ? "border-slate-700 bg-slate-900/60"
+                                            : "border-slate-200 bg-slate-50"
+                                    }`}>
                                 <TextInput
                                     value={password}
                                     onChangeText={setPassword}
@@ -188,9 +181,8 @@ const LoginScreen = () => {
                                         isDark ? "#64748b" : "#94a3b8"
                                     }
                                     secureTextEntry={!showPassword}
-                                    className={`flex-1 font-sans-medium text-base ${
-                                        isDark ? "text-white" : "text-slate-900"
-                                    }`}
+                                    className={`flex-1 font-sans-medium text-base mt-1.5 ${isDark ? "text-white" : "text-slate-900"
+                                        }`}
                                     style={{ textAlign: "right" }}
                                 />
                                 {/* زر إظهار/إخفاء كلمة المرور بأيقونة العين */}
@@ -235,9 +227,8 @@ const LoginScreen = () => {
                         <Pressable
                             disabled={isPending}
                             onPress={handleLogin}
-                            className={`mt-6 h-14 w-full items-center justify-center rounded-2xl bg-main shadow-md ${
-                                isPending ? "opacity-70" : ""
-                            }`}>
+                            className={`mt-6 h-14 w-full items-center justify-center rounded-2xl bg-main shadow-md ${isPending ? "opacity-70" : ""
+                                }`}>
                             {isPending ? (
                                 <ActivityIndicator
                                     size="small"

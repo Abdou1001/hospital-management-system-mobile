@@ -60,8 +60,8 @@ const UserProfileCard: React.FC<UserProfileCardProps> = ({user}) => {
 
                         {/* Role & Status Badges */}
                         <View className="flex-row-reverse items-center gap-2 mt-1">
-                            <View className="rounded-full bg-main/15 px-2.5 py-0.5 border border-main/30">
-                                <Text className="font-sans-bold text-xs text-main dark:text-emerald-400">
+                            <View className="rounded-full bg-main/15 px-2 py-0.5 border border-main/30">
+                                <Text className="font-sans-medium text-[11px] text-main dark:text-emerald-400">
                                     {getRoleTitle(user.role)}
                                 </Text>
                             </View>

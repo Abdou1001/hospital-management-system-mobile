@@ -47,9 +47,9 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({
 }) => {
     const { isDark } = useThemeStore();
     const [modalVisible, setModalVisible] = useState(false);
-    const [showYearSelector, setShowYearSelector] = useState(false);
+    const [viewMode, setViewMode] = useState<"year" | "month" | "day">("year");
 
-    // التحليل المبدئي للتاريخ المختارات
+    // التحليل المبدئي للتاريخ المختار
     const initialDate = useMemo(() => {
         if (value && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
             const [y, m, d] = value.split("-").map(Number);
@@ -69,6 +69,7 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({
             setSelectedMonth(m - 1);
             setSelectedDay(d);
         }
+        setViewMode("year");
         setModalVisible(true);
     };
 
@@ -104,8 +105,9 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({
     };
 
     const handleConfirm = () => {
+        const validDay = Math.min(selectedDay, daysInMonth);
         const mStr = String(selectedMonth + 1).padStart(2, "0");
-        const dStr = String(selectedDay).padStart(2, "0");
+        const dStr = String(validDay).padStart(2, "0");
         const dateStr = `${selectedYear}-${mStr}-${dStr}`;
         onChange(dateStr);
         setModalVisible(false);
@@ -113,7 +115,7 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({
 
     // قائمة السنوات لسرعة الاختيار
     const yearsList = useMemo(() => {
-        const list = [];
+        const list: number[] = [];
         for (let y = maxYear; y >= minYear; y--) {
             list.push(y);
         }
@@ -169,7 +171,7 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({
                 </Text>
             ) : null}
 
-            {/* مودال التقويم العائم */}
+            {/* مودال التقويم */}
             <Modal
                 visible={modalVisible}
                 transparent
@@ -183,10 +185,17 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({
                                 : "border-slate-100 bg-white"
                         }`}>
                         {/* الهيدر العلوي للمودال */}
-                        <View className="mb-4 flex-row-reverse items-center justify-between border-b pb-3 border-slate-200 dark:border-slate-800">
-                            <Text className="font-sans-bold text-lg text-main">
-                                اختر التاريخ
-                            </Text>
+                        <View className="mb-3 flex-row-reverse items-center justify-between border-b pb-3 border-slate-200 dark:border-slate-800">
+                            <View className="flex-row-reverse items-center gap-2">
+                                <Ionicons name="calendar" size={20} color="#10b981" />
+                                <Text className="font-sans-bold text-lg text-main">
+                                    {viewMode === "year"
+                                        ? "اختر السنة"
+                                        : viewMode === "month"
+                                          ? "اختر الشهر"
+                                          : "اختر اليوم"}
+                                </Text>
+                            </View>
                             <Pressable
                                 onPress={() => setModalVisible(false)}
                                 className="p-1 rounded-full bg-slate-100 dark:bg-slate-800">
@@ -198,84 +207,233 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({
                             </Pressable>
                         </View>
 
-                        {/* اختيار السنة والشهر */}
-                        <View className="mb-4 flex-row-reverse items-center justify-between px-2">
+                        {/* شريط خطوات الاختيار (سنة -> شهر -> يوم) */}
+                        <View className="mb-4 flex-row-reverse items-center justify-between gap-1.5 bg-slate-100 dark:bg-slate-800/70 p-1.5 rounded-2xl">
+                            {/* خطوة السنة */}
                             <Pressable
-                                onPress={() => setShowYearSelector(!showYearSelector)}
-                                className="flex-row-reverse items-center gap-1 bg-main/10 px-3 py-1.5 rounded-xl border border-main/20">
-                                <Text className="font-sans-bold text-base text-main">
-                                    {MONTHS_AR[selectedMonth]} {selectedYear}
+                                onPress={() => setViewMode("year")}
+                                className={`flex-1 py-1.5 items-center justify-center rounded-xl ${
+                                    viewMode === "year"
+                                        ? "bg-main shadow-sm"
+                                        : "bg-transparent"
+                                }`}>
+                                <Text
+                                    className={`font-sans-medium text-[10px] ${
+                                        viewMode === "year"
+                                            ? "text-white/80"
+                                            : isDark
+                                              ? "text-slate-400"
+                                              : "text-slate-500"
+                                    }`}>
+                                    السنة
                                 </Text>
-                                <Ionicons
-                                    name={showYearSelector ? "chevron-up" : "chevron-down"}
-                                    size={18}
-                                    color="#10b981"
-                                />
+                                <Text
+                                    className={`font-sans-bold text-xs ${
+                                        viewMode === "year"
+                                            ? "text-white"
+                                            : isDark
+                                              ? "text-slate-200"
+                                              : "text-slate-700"
+                                    }`}>
+                                    {selectedYear}
+                                </Text>
                             </Pressable>
 
-                            {!showYearSelector && (
-                                <View className="flex-row items-center gap-2">
-                                    <Pressable
-                                        onPress={handleNextMonth}
-                                        className="size-9 items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800">
-                                        <Ionicons
-                                            name="chevron-forward"
-                                            size={18}
-                                            color={isDark ? "#ffffff" : "#1e293b"}
-                                        />
-                                    </Pressable>
-                                    <Pressable
-                                        onPress={handlePrevMonth}
-                                        className="size-9 items-center justify-center rounded-xl bg-slate-100 dark:bg-slate-800">
-                                        <Ionicons
-                                            name="chevron-back"
-                                            size={18}
-                                            color={isDark ? "#ffffff" : "#1e293b"}
-                                        />
-                                    </Pressable>
-                                </View>
-                            )}
+                            {/* خطوة الشهر */}
+                            <Pressable
+                                onPress={() => setViewMode("month")}
+                                className={`flex-1 py-1.5 items-center justify-center rounded-xl ${
+                                    viewMode === "month"
+                                        ? "bg-main shadow-sm"
+                                        : "bg-transparent"
+                                }`}>
+                                <Text
+                                    className={`font-sans-medium text-[10px] ${
+                                        viewMode === "month"
+                                            ? "text-white/80"
+                                            : isDark
+                                              ? "text-slate-400"
+                                              : "text-slate-500"
+                                    }`}>
+                                    الشهر
+                                </Text>
+                                <Text
+                                    className={`font-sans-bold text-xs ${
+                                        viewMode === "month"
+                                            ? "text-white"
+                                            : isDark
+                                              ? "text-slate-200"
+                                              : "text-slate-700"
+                                    }`}>
+                                    {MONTHS_AR[selectedMonth]}
+                                </Text>
+                            </Pressable>
+
+                            {/* خطوة اليوم */}
+                            <Pressable
+                                onPress={() => setViewMode("day")}
+                                className={`flex-1 py-1.5 items-center justify-center rounded-xl ${
+                                    viewMode === "day"
+                                        ? "bg-main shadow-sm"
+                                        : "bg-transparent"
+                                }`}>
+                                <Text
+                                    className={`font-sans-medium text-[10px] ${
+                                        viewMode === "day"
+                                            ? "text-white/80"
+                                            : isDark
+                                              ? "text-slate-400"
+                                              : "text-slate-500"
+                                    }`}>
+                                    اليوم
+                                </Text>
+                                <Text
+                                    className={`font-sans-bold text-xs ${
+                                        viewMode === "day"
+                                            ? "text-white"
+                                            : isDark
+                                              ? "text-slate-200"
+                                              : "text-slate-700"
+                                    }`}>
+                                    {Math.min(selectedDay, daysInMonth)}
+                                </Text>
+                            </Pressable>
                         </View>
 
-                        {/* قائمة السنوات السريعة */}
-                        {showYearSelector ? (
-                            <View className="h-64 rounded-2xl bg-slate-50 dark:bg-slate-800/50 p-2">
+                        {/* المحتوى بحسب الخطوة الحالية */}
+                        {viewMode === "year" ? (
+                            /* خطوة 1: اختيار السنة */
+                            <View className="h-72 rounded-2xl bg-slate-50 dark:bg-slate-800/50 p-2">
                                 <ScrollView showsVerticalScrollIndicator>
-                                    <View className="flex-row flex-wrap justify-center gap-2 py-1">
-                                        {yearsList.map((y) => (
+                                    <View className="flex-row-reverse flex-wrap justify-between gap-y-2 py-1">
+                                        {yearsList.map((y) => {
+                                            const isSelected = selectedYear === y;
+                                            return (
+                                                <Pressable
+                                                    key={y}
+                                                    onPress={() => {
+                                                        setSelectedYear(y);
+                                                        setViewMode("month");
+                                                    }}
+                                                    className={`w-[30%] py-2.5 items-center justify-center rounded-xl border ${
+                                                        isSelected
+                                                            ? "bg-main border-main shadow"
+                                                            : isDark
+                                                              ? "bg-slate-800 border-slate-700"
+                                                              : "bg-white border-slate-200"
+                                                    }`}>
+                                                    <Text
+                                                        className={`font-sans-bold text-sm ${
+                                                            isSelected
+                                                                ? "text-white"
+                                                                : isDark
+                                                                  ? "text-slate-200"
+                                                                  : "text-slate-800"
+                                                        }`}>
+                                                        {y}
+                                                    </Text>
+                                                </Pressable>
+                                            );
+                                        })}
+                                    </View>
+                                </ScrollView>
+                            </View>
+                        ) : viewMode === "month" ? (
+                            /* خطوة 2: اختيار الشهر */
+                            <View className="h-72 justify-center rounded-2xl bg-slate-50 dark:bg-slate-800/50 p-2">
+                                <View className="flex-row-reverse flex-wrap justify-between gap-y-2.5">
+                                    {MONTHS_AR.map((name, idx) => {
+                                        const isSelected = selectedMonth === idx;
+                                        return (
                                             <Pressable
-                                                key={y}
+                                                key={idx}
                                                 onPress={() => {
-                                                    setSelectedYear(y);
-                                                    setShowYearSelector(false);
+                                                    setSelectedMonth(idx);
+                                                    setViewMode("day");
                                                 }}
-                                                className={`px-4 py-2 rounded-xl border ${
-                                                    selectedYear === y
+                                                className={`w-[31%] py-3 items-center justify-center rounded-2xl border ${
+                                                    isSelected
                                                         ? "bg-main border-main shadow"
-                                                        : "bg-white dark:bg-slate-800 border-slate-200 dark:border-slate-700"
+                                                        : isDark
+                                                          ? "bg-slate-800 border-slate-700"
+                                                          : "bg-white border-slate-200"
                                                 }`}>
                                                 <Text
                                                     className={`font-sans-bold text-sm ${
-                                                        selectedYear === y
+                                                        isSelected
                                                             ? "text-white"
                                                             : isDark
                                                               ? "text-slate-200"
                                                               : "text-slate-800"
                                                     }`}>
-                                                    {y}
+                                                    {name}
+                                                </Text>
+                                                <Text
+                                                    className={`font-sans-medium text-xs mt-0.5 ${
+                                                        isSelected
+                                                            ? "text-white/80"
+                                                            : isDark
+                                                              ? "text-slate-400"
+                                                              : "text-slate-500"
+                                                    }`}>
+                                                    {idx + 1}
                                                 </Text>
                                             </Pressable>
-                                        ))}
-                                    </View>
-                                </ScrollView>
+                                        );
+                                    })}
+                                </View>
                             </View>
                         ) : (
-                            /* شبكة أيام الشهر */
-                            <View>
+                            /* خطوة 3: اختيار اليوم */
+                            <View className="min-h-[288px]">
+                                {/* تنقل الشهر والسنة السريع داخل عرض اليوم */}
+                                <View className="mb-3 flex-row-reverse items-center justify-between px-1">
+                                    <View className="flex-row-reverse items-center gap-1.5">
+                                        <Pressable
+                                            onPress={() => setViewMode("month")}
+                                            className="flex-row-reverse items-center gap-1 bg-main/10 px-2.5 py-1 rounded-lg border border-main/20">
+                                            <Text className="font-sans-bold text-sm text-main">
+                                                {MONTHS_AR[selectedMonth]}
+                                            </Text>
+                                            <Ionicons name="chevron-down" size={14} color="#10b981" />
+                                        </Pressable>
+
+                                        <Pressable
+                                            onPress={() => setViewMode("year")}
+                                            className="flex-row-reverse items-center gap-1 bg-main/10 px-2.5 py-1 rounded-lg border border-main/20">
+                                            <Text className="font-sans-bold text-sm text-main">
+                                                {selectedYear}
+                                            </Text>
+                                            <Ionicons name="chevron-down" size={14} color="#10b981" />
+                                        </Pressable>
+                                    </View>
+
+                                    <View className="flex-row items-center gap-1.5">
+                                        <Pressable
+                                            onPress={handleNextMonth}
+                                            className="size-8 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800">
+                                            <Ionicons
+                                                name="chevron-forward"
+                                                size={16}
+                                                color={isDark ? "#ffffff" : "#1e293b"}
+                                            />
+                                        </Pressable>
+                                        <Pressable
+                                            onPress={handlePrevMonth}
+                                            className="size-8 items-center justify-center rounded-lg bg-slate-100 dark:bg-slate-800">
+                                            <Ionicons
+                                                name="chevron-back"
+                                                size={16}
+                                                color={isDark ? "#ffffff" : "#1e293b"}
+                                            />
+                                        </Pressable>
+                                    </View>
+                                </View>
+
                                 {/* أسماء أيام الأسبوع */}
-                                <View className="flex-row-reverse justify-between mb-2 px-1">
+                                <View className="flex-row-reverse mb-2">
                                     {DAYS_AR.map((day, idx) => (
-                                        <View key={idx} className="w-9 items-center">
+                                        <View key={idx} className="w-[14.28%] items-center justify-center">
                                             <Text className="font-sans-bold text-xs text-slate-400">
                                                 {day}
                                             </Text>
@@ -283,20 +441,20 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({
                                     ))}
                                 </View>
 
-                                {/* أيام الشهر */}
+                                {/* شبكة أيام الشهر */}
                                 <View className="flex-row-reverse flex-wrap">
                                     {/* فراغات بداية الشهر */}
                                     {Array.from({ length: firstDayOfWeek }).map((_, idx) => (
-                                        <View key={`empty-${idx}`} className="w-9 h-9 my-0.5" />
+                                        <View key={`empty-${idx}`} className="w-[14.28%] h-9 my-0.5" />
                                     ))}
 
                                     {/* الأيام الفعلية */}
                                     {Array.from({ length: daysInMonth }).map((_, idx) => {
                                         const dayNum = idx + 1;
-                                        const isSelected = selectedDay === dayNum;
+                                        const isSelected = Math.min(selectedDay, daysInMonth) === dayNum;
 
                                         return (
-                                            <View key={dayNum} className="w-9 my-0.5 items-center">
+                                            <View key={dayNum} className="w-[14.28%] my-0.5 items-center justify-center">
                                                 <Pressable
                                                     onPress={() => setSelectedDay(dayNum)}
                                                     className={`size-9 items-center justify-center rounded-xl ${
@@ -323,7 +481,7 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({
                         )}
 
                         {/* أزرار الإجراءات */}
-                        <View className="mt-5 flex-row-reverse gap-3 pt-3 border-t border-slate-200 dark:border-slate-800">
+                        <View className="mt-4 flex-row-reverse gap-3 pt-3 border-t border-slate-200 dark:border-slate-800">
                             <Pressable
                                 onPress={handleConfirm}
                                 className="flex-1 h-12 items-center justify-center rounded-xl bg-main shadow">
@@ -348,3 +506,4 @@ export const DatePickerInput: React.FC<DatePickerInputProps> = ({
 };
 
 export default DatePickerInput;
+

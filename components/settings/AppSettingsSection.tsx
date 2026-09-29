@@ -1,11 +1,11 @@
-import {useThemeStore} from "@/store/theme.store";
-import {Ionicons} from "@expo/vector-icons";
-import {useRouter} from "expo-router";
-import React from "react";
-import {Pressable, Switch, Text, TouchableOpacity, View} from "react-native";
+import { useThemeStore } from "@/store/theme.store";
+import { Ionicons } from "@expo/vector-icons";
+import * as Application from "expo-application";
+import { useRouter } from "expo-router";
+import { Pressable, Switch, Text, TouchableOpacity, View } from "react-native";
 
 const AppSettingsSection = () => {
-    const {isDark, toggleTheme} = useThemeStore();
+    const { isDark, toggleTheme } = useThemeStore();
     const router = useRouter();
 
     return (
@@ -15,17 +15,16 @@ const AppSettingsSection = () => {
             </Text>
 
             <View
-                className={`w-full rounded-3xl border divide-y divide-border dark:divide-slate-700 shadow-sm ${
-                    isDark
+                className={`w-full rounded-3xl border divide-y divide-border dark:divide-slate-700 shadow-sm ${isDark
                         ? "border-slate-800 bg-slate-800/90"
                         : "border-slate-100 bg-white"
-                }`}>
+                    }`}>
                 {/* Dark Mode Switch */}
                 <View className="flex-row items-center justify-between p-4">
                     <Switch
                         value={isDark}
                         onValueChange={toggleTheme}
-                        trackColor={{false: "#cbd5e1", true: "#10b981"}}
+                        trackColor={{ false: "#cbd5e1", true: "#10b981" }}
                         thumbColor="#ffffff"
                     />
 
@@ -40,11 +39,10 @@ const AppSettingsSection = () => {
                             </View>
                             <View className="items-end">
                                 <Text
-                                    className={`text-base font-sans-bold ${
-                                        isDark
+                                    className={`text-base font-sans-bold ${isDark
                                             ? "text-slate-100"
                                             : "text-slate-900"
-                                    }`}>
+                                        }`}>
                                     الوضع الداكن
                                 </Text>
                                 <Text className="text-xs font-sans-medium text-muted-foreground dark:text-slate-400">
@@ -69,9 +67,8 @@ const AppSettingsSection = () => {
                         </View>
                         <View className="items-end">
                             <Text
-                                className={`text-base font-sans-bold ${
-                                    isDark ? "text-slate-100" : "text-slate-900"
-                                }`}>
+                                className={`text-base font-sans-bold ${isDark ? "text-slate-100" : "text-slate-900"
+                                    }`}>
                                 الإشعارات
                             </Text>
                             <Text className="text-xs font-sans-medium text-muted-foreground dark:text-slate-400">
@@ -87,28 +84,9 @@ const AppSettingsSection = () => {
                 </TouchableOpacity>
 
                 {/* App Version */}
-                <View className="flex-row-reverse items-center justify-between p-4">
-                    <View className="flex-row-reverse items-center gap-3">
-                        <View className="size-10 rounded-xl bg-slate-500/10 items-center justify-center">
-                            <Ionicons
-                                name="information-circle-outline"
-                                size={20}
-                                color="#64748b"
-                            />
-                        </View>
-                        <View className="items-end">
-                            <Text
-                                className={`text-base font-sans-bold ${
-                                    isDark ? "text-slate-100" : "text-slate-900"
-                                }`}>
-                                إصدار التطبيق
-                            </Text>
-                            <Text className="text-xs font-sans-medium text-muted-foreground dark:text-slate-400">
-                                Version 1.0.0
-                            </Text>
-                        </View>
-                    </View>
-                </View>
+                <Text className="text-xs font-sans-medium text-muted-foreground dark:text-slate-400">
+                    Version {Application.nativeApplicationVersion}
+                </Text>
             </View>
         </View>
     );

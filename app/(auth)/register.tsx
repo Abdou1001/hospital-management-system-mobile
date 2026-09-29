@@ -156,7 +156,7 @@ const RegisterScreen = () => {
                                     placeholderTextColor={
                                         isDark ? "#64748b" : "#94a3b8"
                                     }
-                                    className={`flex-1 font-sans-medium text-base ${
+                                    className={`flex-1 font-sans-medium text-base mt-2 ${
                                         isDark ? "text-white" : "text-slate-900"
                                     }`}
                                     style={{ textAlign: "right" }}
@@ -196,7 +196,7 @@ const RegisterScreen = () => {
                                         isDark ? "#64748b" : "#94a3b8"
                                     }
                                     keyboardType="phone-pad"
-                                    className={`flex-1 font-sans-medium text-base ${
+                                    className={`flex-1 font-sans-medium text-base mt-2 ${
                                         isDark ? "text-white" : "text-slate-900"
                                     }`}
                                     style={{ textAlign: "right" }}
@@ -237,7 +237,7 @@ const RegisterScreen = () => {
                                     }
                                     keyboardType="email-address"
                                     autoCapitalize="none"
-                                    className={`flex-1 font-sans-medium text-base ${
+                                    className={`flex-1 font-sans-medium text-base mt-2 ${
                                         isDark ? "text-white" : "text-slate-900"
                                     }`}
                                     style={{ textAlign: "right" }}
@@ -347,7 +347,7 @@ const RegisterScreen = () => {
                                         isDark ? "#64748b" : "#94a3b8"
                                     }
                                     secureTextEntry={!showPassword}
-                                    className={`flex-1 font-sans-medium text-base ${
+                                    className={`flex-1 font-sans-medium text-base mt-1.5 ${
                                         isDark ? "text-white" : "text-slate-900"
                                     }`}
                                     style={{ textAlign: "right" }}
@@ -402,7 +402,7 @@ const RegisterScreen = () => {
                                         isDark ? "#64748b" : "#94a3b8"
                                     }
                                     secureTextEntry={!showConfirmPassword}
-                                    className={`flex-1 font-sans-medium text-base ${
+                                    className={`flex-1 font-sans-medium text-base mt-2 ${
                                         isDark ? "text-white" : "text-slate-900"
                                     }`}
                                     style={{ textAlign: "right" }}
