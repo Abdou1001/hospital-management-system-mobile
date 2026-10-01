@@ -105,7 +105,7 @@ const NotificationHeader: React.FC<NotificationHeaderProps> = ({
                                     color="#10b981"
                                 />
                                 <Text className="font-sans-bold text-xs text-emerald-600 dark:text-emerald-400 mt-0.5">
-                                    تحديد الكل كمقروء
+                                    قراءة الكل
                                 </Text>
                             </Pressable>
                         )}

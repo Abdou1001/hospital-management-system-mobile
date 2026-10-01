@@ -30,6 +30,7 @@ export default function ReceptionLayout() {
 
     return (
         <Tabs
+            initialRouteName="pending"
             tabBar={(props) => (
                 <ReceptionTabBar {...props} pendingCount={pendingCount} />
             )}
@@ -38,15 +39,16 @@ export default function ReceptionLayout() {
             }}
         >
             <Tabs.Screen
-                name="pending"
-                options={{
-                    title: "الحجوزات المعلقة",
-                }}
-            />
-            <Tabs.Screen
+
                 name="all"
                 options={{
                     title: "جميع الحجوزات",
+                }}
+            />
+            <Tabs.Screen
+                name="pending"
+                options={{
+                    title: "الحجوزات المعلقة",
                 }}
             />
         </Tabs>

@@ -16,23 +16,23 @@ const ReceptionTabBar: React.FC<ReceptionTabBarProps> = ({
 }) => {
     const tabItems: AnimatedTabItem[] = [
         {
-            name: "pending",
-            title: "المعلقة",
-            badge: pendingCount,
+            name: "all",
+            title: "جميع",
             renderIcon: (isActive, color) => (
                 <Ionicons
-                    name={isActive ? "time" : "time-outline"}
+                    name={isActive ? "calendar" : "calendar-outline"}
                     size={22}
                     color={color}
                 />
             ),
         },
         {
-            name: "all",
-            title: "جميع",
+            name: "pending",
+            title: "المعلقة",
+            badge: pendingCount,
             renderIcon: (isActive, color) => (
                 <Ionicons
-                    name={isActive ? "calendar" : "calendar-outline"}
+                    name={isActive ? "time" : "time-outline"}
                     size={22}
                     color={color}
                 />

@@ -17,6 +17,10 @@ import { ThemeProvider } from "@/context/ThemeContext";
 import { useCurrentUser } from "@/hooks/auth/useCurrentUser";
 import AppContent from "@/store/providers/AppContent";
 import { registerForPushNotificationsAsync } from "@/services/notifications/registerForPushNotifications";
+import { I18nManager } from "react-native";
+
+I18nManager.allowRTL(true);
+I18nManager.forceRTL(true);
 
 export const unstable_settings = {
     initialRouteName: "(tabs)",
