@@ -26,7 +26,7 @@
     },
     "android": {
       "package": "com.altaawaonhospital.app",
-      "versionCode": 3,
+      "versionCode": 4,
       "adaptiveIcon": {
         "backgroundColor": "#02a972",
         "foregroundImage": "./assets/icons/application_icon.png"
@@ -52,6 +52,12 @@
     },
     "plugins": [
       "expo-router",
+      [
+        "expo-localization",
+        {
+          "supportsRTL": false
+        }
+      ],
       [
         "expo-splash-screen",
         {
