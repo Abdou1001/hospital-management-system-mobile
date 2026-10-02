@@ -135,7 +135,7 @@ const VerifyPhoneScreen = () => {
                                     keyboardType="number-pad"
                                     style={{ textAlign: "center" }}
                                     maxLength={6}
-                                    className={`w-full font-sans-bold text-xl h-16 mt-3 tracking-widest ${isDark ? "text-white" : "text-slate-900"
+                                    className={`w-full font-sans-bold text-xl h-16  tracking-widest ${isDark ? "text-white" : "text-slate-900"
                                         }`}
                                 />
                             </View>

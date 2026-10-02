@@ -69,7 +69,7 @@ const ForgetPasswordScreen = () => {
                 <AuthHeader title="نسيان كلمة السر" />
 
                 {/* كارت الفورم */}
-                <SafeAreaView className="flex-1 px-6 -mt-8 pb-0">
+                <SafeAreaView className="flex-1 px-6 -mt-8 pb-50">
                     <View
                         className={`w-full rounded-3xl border p-6 shadow-sm ${
                             isDark

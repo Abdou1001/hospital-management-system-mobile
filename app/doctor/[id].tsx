@@ -333,7 +333,7 @@ const DoctorDetailsScreen = () => {
 
             {/* الشريط السفلي لزر الحجز */}
             <View
-                className={`absolute bottom-0 left-0 right-0 border-t p-4 shadow-lg ${
+                className={`absolute bottom-0 left-0 right-0 border-t px-5 py-2 shadow-lg ${
                     isDark
                         ? "border-slate-700 bg-slate-800"
                         : "border-slate-200 bg-white"
@@ -347,7 +347,7 @@ const DoctorDetailsScreen = () => {
                             );
                         }
                     }}
-                    className={`items-center justify-center rounded-2xl py-4 shadow-md ${
+                    className={`items-center justify-center rounded-2xl py-3 shadow-md mb-5 ${
                         isInactive
                             ? isDark
                                 ? "bg-slate-700"

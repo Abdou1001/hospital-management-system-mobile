@@ -1,9 +1,12 @@
-import "react-native-gesture-handler";
 import "@/global.css";
-import {SplashScreen, Stack} from "expo-router";
-import React, {useEffect} from "react";
+import { SplashScreen } from "expo-router";
+import { useEffect } from "react";
+import "react-native-gesture-handler";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 // font
+import { ThemeProvider } from "@/context/ThemeContext";
+import { registerForPushNotificationsAsync } from "@/services/notifications/registerForPushNotifications";
+import AppContent from "@/store/providers/AppContent";
 import {
     Cairo_400Regular,
     Cairo_500Medium,
@@ -12,14 +15,8 @@ import {
     Cairo_800ExtraBold,
     useFonts,
 } from "@expo-google-fonts/cairo";
-import {QueryClient, QueryClientProvider} from "@tanstack/react-query";
-import { ThemeProvider } from "@/context/ThemeContext";
-import { useCurrentUser } from "@/hooks/auth/useCurrentUser";
-import AppContent from "@/store/providers/AppContent";
-import { registerForPushNotificationsAsync } from "@/services/notifications/registerForPushNotifications";
-import {I18nManager} from "react-native";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
-console.log("RTL:", I18nManager.isRTL);
 
 
 export const unstable_settings = {
@@ -44,7 +41,7 @@ export default function App() {
     useEffect(() => {
         registerForPushNotificationsAsync();
     }, []);
-    
+
     if (!fontsLoaded) {
         return null;
     }

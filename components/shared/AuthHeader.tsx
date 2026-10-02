@@ -21,11 +21,7 @@ const AuthHeader: React.FC<AuthHeaderProps> = ({
     const { isDark } = useThemeStore();
 
     const handleBack = () => {
-        if (onBack) {
-            onBack();
-        } else {
-            router.replace("/(tabs)");
-        }
+        router.back();
     };
 
     return (

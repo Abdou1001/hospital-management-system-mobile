@@ -144,7 +144,7 @@ const LoginScreen = () => {
                                     }
                                     keyboardType="default"
                                     autoCapitalize="none"
-                                    className={`flex-1 font-sans-medium text-base mt-2 ${isDark ? "text-white" : "text-slate-900"
+                                    className={`flex-1 font-sans-medium text-base ${isDark ? "text-white" : "text-slate-900"
                                         }`}
                                     style={{ textAlign: "right" }}
                                 />
@@ -181,7 +181,7 @@ const LoginScreen = () => {
                                         isDark ? "#64748b" : "#94a3b8"
                                     }
                                     secureTextEntry={!showPassword}
-                                    className={`flex-1 font-sans-medium text-base mt-1.5 ${isDark ? "text-white" : "text-slate-900"
+                                    className={`flex-1 font-sans-medium text-base ${isDark ? "text-white" : "text-slate-900"
                                         }`}
                                     style={{ textAlign: "right" }}
                                 />

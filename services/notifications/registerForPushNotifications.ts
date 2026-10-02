@@ -74,7 +74,7 @@ export async function registerForPushNotificationsAsync(): Promise<string | null
                     const deviceId = String(response.results.device_id);
                     await AsyncStorage.setItem(DEVICE_ID_STORAGE_KEY, deviceId);
                     setCachedDeviceId(deviceId);
-                    console.log("تم تسجيل الجهاز بنجاح. Device ID:", deviceId);
+                    // console.log("تم تسجيل الجهاز بنجاح. Device ID:", deviceId);
                 }
             } catch (regError) {
                 console.warn("خطأ أثناء إرسال بيانات الجهاز للباك اند:", regError);

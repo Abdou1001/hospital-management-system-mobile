@@ -1,7 +1,7 @@
-import { Ionicons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
-import { styled } from "nativewind";
-import React, { useState } from "react";
+import {Ionicons} from "@expo/vector-icons";
+import {useRouter} from "expo-router";
+import {styled} from "nativewind";
+import {useState} from "react";
 import {
     ActivityIndicator,
     Keyboard,
@@ -11,21 +11,21 @@ import {
     TextInput,
     View,
 } from "react-native";
-import { SafeAreaView as RNSafeAreaView } from "react-native-safe-area-context";
+import {SafeAreaView as RNSafeAreaView} from "react-native-safe-area-context";
 
 import AuthHeader from "@/components/shared/AuthHeader";
 import DatePickerInput from "@/components/ui/DatePickerInput";
-import { useRegister } from "@/hooks/auth/useRegister";
-import { toast } from "@/lib/toast";
-import { useThemeStore } from "@/store/theme.store";
-import { registerSchema } from "@/validation/auth/schemas/register.schema";
+import {useRegister} from "@/hooks/auth/useRegister";
+import {toast} from "@/lib/toast";
+import {useThemeStore} from "@/store/theme.store";
+import {registerSchema} from "@/validation/auth/schemas/register.schema";
 
 const SafeAreaView = styled(RNSafeAreaView);
 
 const RegisterScreen = () => {
     const router = useRouter();
-    const { isDark } = useThemeStore();
-    const { mutate: registerMutate, isPending } = useRegister();
+    const {isDark} = useThemeStore();
+    const {mutate: registerMutate, isPending} = useRegister();
 
     // حالة المدخلات
     const [fullName, setFullName] = useState("");
@@ -72,7 +72,9 @@ const RegisterScreen = () => {
             setErrors(newErrors);
 
             const firstMsg = Object.values(newErrors)[0];
-            toast.error(firstMsg || "يرجى التأكد من ملء كافة البيانات بشكل صحيح");
+            toast.error(
+                firstMsg || "يرجى التأكد من ملء كافة البيانات بشكل صحيح",
+            );
             return;
         }
 
@@ -87,13 +89,12 @@ const RegisterScreen = () => {
             phone_number: payload.phone_number,
         };
 
-
         registerMutate(requestData, {
             onSuccess: () => {
                 // الانتقال إلى صفحة تأكيد رقم الهاتف مع تمرير رقم الهاتف
                 router.push({
                     pathname: "/(auth)/verify-phone",
-                    params: { phone_number: payload.phone_number },
+                    params: {phone_number: payload.phone_number},
                 } as any);
             },
         });
@@ -102,7 +103,7 @@ const RegisterScreen = () => {
     return (
         <View className="flex-1 bg-background dark:bg-slate-900">
             <ScrollView
-                contentContainerStyle={{ flexGrow: 1 }}
+                contentContainerStyle={{flexGrow: 1}}
                 keyboardShouldPersistTaps="handled"
                 showsVerticalScrollIndicator={false}
                 onScroll={Keyboard.dismiss}>
@@ -122,13 +123,13 @@ const RegisterScreen = () => {
                             className={`font-sans-bold text-2xl ${
                                 isDark ? "text-white" : "text-slate-800"
                             }`}
-                            style={{ textAlign: "right" }}>
+                            style={{textAlign: "right"}}>
                             إنشاء حساب جديد
                         </Text>
 
                         <Text
                             className="mt-1.5 font-sans-medium text-sm text-muted-foreground dark:text-slate-400"
-                            style={{ textAlign: "right" }}>
+                            style={{textAlign: "right"}}>
                             يرجى أدخال البيانات التالية لإنشاء حسابك
                         </Text>
 
@@ -138,7 +139,7 @@ const RegisterScreen = () => {
                                 className={`mb-2 font-sans-bold text-sm ${
                                     isDark ? "text-slate-200" : "text-slate-700"
                                 }`}
-                                style={{ textAlign: "right" }}>
+                                style={{textAlign: "right"}}>
                                 الاسم الكامل (الاسم الرباعي)
                             </Text>
                             <View
@@ -156,16 +157,16 @@ const RegisterScreen = () => {
                                     placeholderTextColor={
                                         isDark ? "#64748b" : "#94a3b8"
                                     }
-                                    className={`flex-1 font-sans-medium text-base mt-2 ${
+                                    className={`flex-1 font-sans-medium text-base ${
                                         isDark ? "text-white" : "text-slate-900"
                                     }`}
-                                    style={{ textAlign: "right" }}
+                                    style={{textAlign: "right"}}
                                 />
                             </View>
                             {errors.full_name ? (
                                 <Text
                                     className="mt-1 font-sans-medium text-xs text-red-500"
-                                    style={{ textAlign: "right" }}>
+                                    style={{textAlign: "right"}}>
                                     {errors.full_name}
                                 </Text>
                             ) : null}
@@ -177,7 +178,7 @@ const RegisterScreen = () => {
                                 className={`mb-2 font-sans-bold text-sm ${
                                     isDark ? "text-slate-200" : "text-slate-700"
                                 }`}
-                                style={{ textAlign: "right" }}>
+                                style={{textAlign: "right"}}>
                                 رقم الهاتف
                             </Text>
                             <View
@@ -196,16 +197,16 @@ const RegisterScreen = () => {
                                         isDark ? "#64748b" : "#94a3b8"
                                     }
                                     keyboardType="phone-pad"
-                                    className={`flex-1 font-sans-medium text-base mt-2 ${
+                                    className={`flex-1 font-sans-medium text-base ${
                                         isDark ? "text-white" : "text-slate-900"
                                     }`}
-                                    style={{ textAlign: "right" }}
+                                    style={{textAlign: "right"}}
                                 />
                             </View>
                             {errors.phone_number ? (
                                 <Text
                                     className="mt-1 font-sans-medium text-xs text-red-500"
-                                    style={{ textAlign: "right" }}>
+                                    style={{textAlign: "right"}}>
                                     {errors.phone_number}
                                 </Text>
                             ) : null}
@@ -217,7 +218,7 @@ const RegisterScreen = () => {
                                 className={`mb-2 font-sans-bold text-sm ${
                                     isDark ? "text-slate-200" : "text-slate-700"
                                 }`}
-                                style={{ textAlign: "right" }}>
+                                style={{textAlign: "right"}}>
                                 البريد الإلكتروني (اختياري)
                             </Text>
                             <View
@@ -237,16 +238,16 @@ const RegisterScreen = () => {
                                     }
                                     keyboardType="email-address"
                                     autoCapitalize="none"
-                                    className={`flex-1 font-sans-medium text-base mt-2 ${
+                                    className={`flex-1 font-sans-medium text-base ${
                                         isDark ? "text-white" : "text-slate-900"
                                     }`}
-                                    style={{ textAlign: "right" }}
+                                    style={{textAlign: "right"}}
                                 />
                             </View>
                             {errors.email ? (
                                 <Text
                                     className="mt-1 font-sans-medium text-xs text-red-500"
-                                    style={{ textAlign: "right" }}>
+                                    style={{textAlign: "right"}}>
                                     {errors.email}
                                 </Text>
                             ) : null}
@@ -269,9 +270,11 @@ const RegisterScreen = () => {
                             <View className="flex-1">
                                 <Text
                                     className={`mb-2 font-sans-bold text-sm ${
-                                        isDark ? "text-slate-200" : "text-slate-700"
+                                        isDark
+                                            ? "text-slate-200"
+                                            : "text-slate-700"
                                     }`}
-                                    style={{ textAlign: "right" }}>
+                                    style={{textAlign: "right"}}>
                                     النوع
                                 </Text>
                                 <View className="h-14 w-full flex-row rounded-2xl bg-slate-100 dark:bg-slate-900/60 p-1 border border-slate-200 dark:border-slate-700">
@@ -315,7 +318,7 @@ const RegisterScreen = () => {
                                 {errors.gender ? (
                                     <Text
                                         className="mt-1 font-sans-medium text-xs text-red-500"
-                                        style={{ textAlign: "right" }}>
+                                        style={{textAlign: "right"}}>
                                         {errors.gender}
                                     </Text>
                                 ) : null}
@@ -328,7 +331,7 @@ const RegisterScreen = () => {
                                 className={`mb-2 font-sans-bold text-sm ${
                                     isDark ? "text-slate-200" : "text-slate-700"
                                 }`}
-                                style={{ textAlign: "right" }}>
+                                style={{textAlign: "right"}}>
                                 كلمة المرور
                             </Text>
                             <View
@@ -347,10 +350,10 @@ const RegisterScreen = () => {
                                         isDark ? "#64748b" : "#94a3b8"
                                     }
                                     secureTextEntry={!showPassword}
-                                    className={`flex-1 font-sans-medium text-base mt-1.5 ${
+                                    className={`flex-1 font-sans-medium text-base ${
                                         isDark ? "text-white" : "text-slate-900"
                                     }`}
-                                    style={{ textAlign: "right" }}
+                                    style={{textAlign: "right"}}
                                 />
                                 <Pressable
                                     onPress={() =>
@@ -371,7 +374,7 @@ const RegisterScreen = () => {
                             {errors.password ? (
                                 <Text
                                     className="mt-1 font-sans-medium text-xs text-red-500"
-                                    style={{ textAlign: "right" }}>
+                                    style={{textAlign: "right"}}>
                                     {errors.password}
                                 </Text>
                             ) : null}
@@ -383,7 +386,7 @@ const RegisterScreen = () => {
                                 className={`mb-2 font-sans-bold text-sm ${
                                     isDark ? "text-slate-200" : "text-slate-700"
                                 }`}
-                                style={{ textAlign: "right" }}>
+                                style={{textAlign: "right"}}>
                                 تأكيد كلمة المرور
                             </Text>
                             <View
@@ -402,14 +405,16 @@ const RegisterScreen = () => {
                                         isDark ? "#64748b" : "#94a3b8"
                                     }
                                     secureTextEntry={!showConfirmPassword}
-                                    className={`flex-1 font-sans-medium text-base mt-2 ${
+                                    className={`flex-1 font-sans-medium text-base ${
                                         isDark ? "text-white" : "text-slate-900"
                                     }`}
-                                    style={{ textAlign: "right" }}
+                                    style={{textAlign: "right"}}
                                 />
                                 <Pressable
                                     onPress={() =>
-                                        setShowConfirmPassword(!showConfirmPassword)
+                                        setShowConfirmPassword(
+                                            !showConfirmPassword,
+                                        )
                                     }
                                     className="p-2">
                                     <Ionicons
@@ -426,7 +431,7 @@ const RegisterScreen = () => {
                             {errors.confirmPassword ? (
                                 <Text
                                     className="mt-1 font-sans-medium text-xs text-red-500"
-                                    style={{ textAlign: "right" }}>
+                                    style={{textAlign: "right"}}>
                                     {errors.confirmPassword}
                                 </Text>
                             ) : null}
@@ -458,7 +463,9 @@ const RegisterScreen = () => {
                             </Text>
 
                             <Pressable
-                                onPress={() => router.push("/(auth)/login" as any)}
+                                onPress={() =>
+                                    router.push("/(auth)/login" as any)
+                                }
                                 className="mt-3 h-13 w-full items-center justify-center rounded-2xl border-2 border-main bg-transparent py-3.5">
                                 <Text className="font-sans-bold text-sm text-main dark:text-green-400">
                                     تسجيل الدخول
